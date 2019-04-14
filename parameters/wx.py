@@ -22,7 +22,7 @@ test_02_advertiser_update = [({'appid': 'wxd1de6b7bf1d874f9',
                               {'result': True,
                                'code': 0,
                                'msg': ''},
-                              'add_advertiser')]
+                              'update_advertiser')]
 
 test_03_advertiser_get = [
     ({'appid': 'wxd1de6b7bf1d874f9'},
