@@ -123,14 +123,14 @@ class TestWxApiQualifications(object):
         if res['result']:
             for qualification in response['data']['list']:
                 cursor = mongodb.sndo['wx.account.qualification'].find_one(
-                    {'qualification_id':qualification['qualification_id']})
+                    {'qualification_id': qualification['qualification_id']})
                 assert cursor, 'qualification not found'
                 assert cursor['qualification_name'] == qualification['qualification_name'], 'qualification_name not equal'
                 assert cursor['qualification_type'] == qualification['qualification_type'], 'qualification_type not equal'
                 assert cursor['qualification_image'] == qualification['qualification_image'], 'qualification_image not equal'
                 assert cursor['qualification_status'] == qualification['qualification_status'], 'qualification_status not equal'
                 assert cursor['valid_date'] == qualification['valid_date'], 'valid_date not equal'
-    
+
     # Notice: qualification in STATUS_PENDING status not allowed to be deleted.
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -143,18 +143,19 @@ class TestWxApiQualifications(object):
             test_title,
             mongodb):
         url = urllib.parse.urljoin(addr, 'qualifications/delete')
-        payload['qualification_id']=qualification_id if payload['qualification_id']=='global_var' else payload['qualification_id']
+        payload['qualification_id'] = qualification_id if payload['qualification_id'] == 'global_var' else payload['qualification_id']
         response = r.req('POST', url, json=payload)
         assert res['code'] == response['code'], 'code not equal'
         assert res['msg'] == response['message'], 'message not equal'
         if res['result']:
             cursor = mongodb.sndo['wx.account.qualification'].find_one(
-                    {'qualification_id':qualification_id})
-            assert cursor == None, 'delete failed'
+                {'qualification_id': qualification_id})
+            assert cursor is None, 'delete failed'
+
 
 @pytest.mark.userfixtures('base')
 class TestWxApiSpEntrustment(object):
-    
+
     # Notice: no resources now
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -191,6 +192,7 @@ class TestWxApiSpEntrustment(object):
                 {'appid': payload['appid']})
             assert cursor, 'sp_entrustment not found'
 
+
 @pytest.mark.userfixtures('base')
 class TestWxApiFundTransfer(object):
 
@@ -215,6 +217,7 @@ class TestWxApiFundTransfer(object):
             assert payload['external_bill_no'] in response['data']['external_bill_no']
             assert response['data']['is_repeated'] == False
 
+
 @pytest.mark.userfixtures('base')
 class TestWxApiFunds(object):
 
@@ -236,7 +239,7 @@ class TestWxApiFunds(object):
 
 @pytest.mark.userfixtures('base')
 class TestWxApiFundStatementsDetailed(object):
-    
+
     @Log.logtestcase()
     @pytest.mark.parametrize(
         'payload, res, test_title',
@@ -252,8 +255,11 @@ class TestWxApiFundStatementsDetailed(object):
         assert res['code'] == response['code'], 'code not equal'
         assert res['msg'] == response['message'], 'message not equal'
         if res['result']:
-            key,value = 'order_id', transfter_order_id
-            assert str(response).find("'{}': '{}'".format(key,value)), 'not found'
+            key, value = 'order_id', transfter_order_id
+            assert str(response).find(
+                "'{}': '{}'".format(
+                    key, value)), 'not found'
+
 
 @pytest.mark.userfixtures('base')
 class TestWxApiCampaigns(object):
@@ -282,7 +288,8 @@ class TestWxApiCampaigns(object):
             assert cursor['campaign_type'] == payload['campaign_type'], 'campaign_type not equal'
             assert cursor['product_type'] == payload['product_type'], 'product_type not equal'
             assert cursor['configured_status'] == payload['configured_status'], 'configured_status not equal'
-            assert cursor['daily_budget'] == (payload['daily_budget'] if payload['daily_budget'] else 0), 'daily_budget not equal'
+            assert cursor['daily_budget'] == (
+                payload['daily_budget'] if payload['daily_budget'] else 0), 'daily_budget not equal'
             assert cursor['sndo_ader_id'] == payload['sndo_ader_id'], 'sndo_ader_id not equal'
 
     @Log.logtestcase()
@@ -296,7 +303,7 @@ class TestWxApiCampaigns(object):
             test_title,
             mongodb):
         url = urllib.parse.urljoin(addr, 'campaigns/get')
-        payload['campaign_id'] = campaign_id if payload['campaign_id']=='global_var' else payload['campaign_id']
+        payload['campaign_id'] = campaign_id if payload['campaign_id'] == 'global_var' else payload['campaign_id']
         response = r.req('POST', url, json=payload)
         assert res['code'] == response['code'], 'code not equal'
         assert res['msg'] == response['message'], 'message not equal'
@@ -323,7 +330,7 @@ class TestWxApiCampaigns(object):
         bf_cursor = mongodb.sndo['wx.campaign'].find_one(
             {'appid': payload['appid'], 'campaign_id': campaign_id})
         url = urllib.parse.urljoin(addr, 'campaigns/update')
-        payload['campaign_id'] = campaign_id if payload['campaign_id']=='global_var' else payload['campaign_id']
+        payload['campaign_id'] = campaign_id if payload['campaign_id'] == 'global_var' else payload['campaign_id']
         response = r.req('POST', url, json=payload)
         assert res['code'] == response['code'], 'code not equal'
         assert res['msg'] == response['message'], 'message not equal'
@@ -332,9 +339,13 @@ class TestWxApiCampaigns(object):
                 {'appid': payload['appid'], 'campaign_id': payload['campaign_id']})
             assert af_cursor, 'campaign not found'
             assert af_cursor['campaign_name'] == payload['campaign_name'] if payload['campaign_name'] else bf_cursor['campaign_name']
-            assert af_cursor['configured_status'] == payload['configured_status'] if payload['configured_status'] else bf_cursor['configured_status']
-            assert str(af_cursor['daily_budget']) == str(payload['daily_budget']) if str(
-                payload['daily_budget']) else str(bf_cursor['daily_budget'])
+            assert af_cursor['configured_status'] == payload['configured_status'] if payload[
+                'configured_status'] else bf_cursor['configured_status']
+            assert str(
+                af_cursor['daily_budget']) == str(
+                payload['daily_budget']) if str(
+                payload['daily_budget']) else str(
+                bf_cursor['daily_budget'])
 
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -347,7 +358,7 @@ class TestWxApiCampaigns(object):
             test_title,
             mongodb):
         url = urllib.parse.urljoin(addr, 'campaigns/delete')
-        payload['campaign_id'] = campaign_id if payload['campaign_id']=='global_var' else payload['campaign_id']
+        payload['campaign_id'] = campaign_id if payload['campaign_id'] == 'global_var' else payload['campaign_id']
         response = r.req('POST', url, json=payload)
         assert res['code'] == response['code'], 'code not equal'
         assert res['msg'] == response['message'], 'message not equal'
@@ -355,6 +366,7 @@ class TestWxApiCampaigns(object):
             cursor = mongodb.sndo['wx.campaign'].find_one(
                 {'appid': payload['appid'], 'campaign_id': payload['campaign_id']})
             assert cursor['is_deleted'], 'delete fail'
+
 
 @pytest.mark.userfixtures('base')
 class TestWxApiAdgroups(object):
@@ -370,7 +382,12 @@ class TestWxApiAdgroups(object):
             test_title,
             mongodb):
         # create new campaign
-        response = r.req('POST',urllib.parse.urljoin(addr, 'campaigns/add'),json=wx.test_01_campaigns_add[0][0])
+        response = r.req(
+            'POST',
+            urllib.parse.urljoin(
+                addr,
+                'campaigns/add'),
+            json=wx.test_01_campaigns_add[0][0])
         global campaign_id
         campaign_id = response['data']['campaign_id']
         url = urllib.parse.urljoin(addr, 'adgroups/add')
