@@ -4,12 +4,17 @@ import urllib.parse
 import requests
 import pytest
 from parameters import wx
-from utils import Log, Requests
+from utils import Log, Requests, ConfigParser
 
-
-addr = 'http://test.sndo.com/sdk/wx/'
+cp = ConfigParser()
+addr = cp.get_wx_addr()
 log = Log.getlog('wxTest')
 r = Requests()
+# global variables
+qualification_id = None
+transfter_order_id = None
+campaign_id = None
+adgroup_id = None
 
 
 @pytest.mark.userfixtures('base')
@@ -33,7 +38,7 @@ class TestWxApiAdvertiser(object):
             cursor = mongodb.sndo['wx.account'].find_one(
                 {'appid': payload['appid']})
             assert cursor, 'advertiser not found'
-    
+
     @Log.logtestcase()
     @pytest.mark.parametrize(
         'payload, res, test_title',
@@ -71,6 +76,314 @@ class TestWxApiAdvertiser(object):
             cursor = mongodb.sndo['wx.account'].find_one(
                 {'appid': payload['appid']})
             assert cursor, 'advertiser not found'
+
+
+@pytest.mark.userfixtures('base')
+class TestWxApiQualifications(object):
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_01_qualifications_add)
+    def test_01_qualifications_add(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'qualifications/add')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            cursor = mongodb.sndo['wx.account.qualification'].find_one(
+                {'qualification_id': response['data']['qualification_id']})
+            assert cursor, 'qualification not found'
+            global qualification_id
+            qualification_id = response['data']['qualification_id']
+            assert cursor['appid'] == payload['appid'], 'appid not equal'
+            assert cursor['qualification_name'] == payload['qualification_name'], 'qualification_name not equal'
+            assert cursor['qualification_image_id'] == payload['qualification_image_id'], 'qualification_image_id not equal'
+            assert cursor['qualification_type'] == payload['qualification_type'], 'qualification_type not equal'
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_02_qualifications_get)
+    def test_02_qualifications_get(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'qualifications/get')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            for qualification in response['data']['list']:
+                cursor = mongodb.sndo['wx.account.qualification'].find_one(
+                    {'qualification_id':qualification['qualification_id']})
+                assert cursor, 'qualification not found'
+                assert cursor['qualification_name'] == qualification['qualification_name'], 'qualification_name not equal'
+                assert cursor['qualification_type'] == qualification['qualification_type'], 'qualification_type not equal'
+                assert cursor['qualification_image'] == qualification['qualification_image'], 'qualification_image not equal'
+                assert cursor['qualification_status'] == qualification['qualification_status'], 'qualification_status not equal'
+                assert cursor['valid_date'] == qualification['valid_date'], 'valid_date not equal'
+    
+    # Notice: qualification in STATUS_PENDING status not allowed to be deleted.
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_03_qualifications_delete)
+    def test_03_qualifications_delete(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'qualifications/delete')
+        payload['qualification_id']=qualification_id if payload['qualification_id']=='global_var' else payload['qualification_id']
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            cursor = mongodb.sndo['wx.account.qualification'].find_one(
+                    {'qualification_id':qualification_id})
+            assert cursor == None, 'delete failed'
+
+@pytest.mark.userfixtures('base')
+class TestWxApiSpEntrustment(object):
+    
+    # Notice: no resources now
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_01_sp_entrustment_add)
+    @pytest.mark.skip(reason='no resources')
+    def test_01_sp_entrustment_add(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'sp_entrustment/add')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_02_sp_entrustment_get)
+    def test_02_sp_entrustment_get(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'sp_entrustment/get')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            cursor = mongodb.sndo['wx.account'].find_one(
+                {'appid': payload['appid']})
+            assert cursor, 'sp_entrustment not found'
+
+@pytest.mark.userfixtures('base')
+class TestWxApiFundTransfer(object):
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_01_fund_transfer_add)
+    def test_01_fund_transfer_add(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'fund_transfer/add')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            global transfter_order_id
+            transfter_order_id = response['data']['external_bill_no']
+            assert payload['amount'] == response['data']['amount']
+            assert payload['external_bill_no'] in response['data']['external_bill_no']
+            assert response['data']['is_repeated'] == False
+
+@pytest.mark.userfixtures('base')
+class TestWxApiFunds(object):
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_01_funds_get)
+    def test_01_funds_get(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'funds/get')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+
+
+@pytest.mark.userfixtures('base')
+class TestWxApiFundStatementsDetailed(object):
+    
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_01_fund_statements_detailed_get)
+    def test_01_fund_statements_detailed_get(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'fund_statements_detailed/get')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            key,value = 'order_id', transfter_order_id
+            assert str(response).find("'{}': '{}'".format(key,value)), 'not found'
+
+@pytest.mark.userfixtures('base')
+class TestWxApiCampaigns(object):
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_01_campaigns_add)
+    def test_01_campaigns_add(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'campaigns/add')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            cursor = mongodb.sndo['wx.campaign'].find_one(
+                {'campaign_id': response['data']['campaign_id']})
+            assert cursor, 'campaign not found'
+            global campaign_id
+            campaign_id = response['data']['campaign_id']
+            assert cursor['campaign_name'] == payload['campaign_name'], 'campaign_name not equal'
+            assert cursor['campaign_type'] == payload['campaign_type'], 'campaign_type not equal'
+            assert cursor['product_type'] == payload['product_type'], 'product_type not equal'
+            assert cursor['configured_status'] == payload['configured_status'], 'configured_status not equal'
+            assert cursor['daily_budget'] == (payload['daily_budget'] if payload['daily_budget'] else 0), 'daily_budget not equal'
+            assert cursor['sndo_ader_id'] == payload['sndo_ader_id'], 'sndo_ader_id not equal'
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_02_campaigns_get)
+    def test_02_campaigns_get(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'campaigns/get')
+        payload['campaign_id'] = campaign_id if payload['campaign_id']=='global_var' else payload['campaign_id']
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            if payload['campaign_id']:
+                cursor = mongodb.sndo['wx.campaign'].find_one(
+                    {'appid': payload['appid'], 'campaign_id': payload['campaign_id']})
+                assert cursor, 'campaign not found'
+            else:
+                cursor = mongodb.sndo['wx.campaign'].find(
+                    {'appid': payload['appid']})
+                assert cursor, 'campaign not found'
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_03_campaigns_update)
+    def test_03_campaigns_update(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        bf_cursor = mongodb.sndo['wx.campaign'].find_one(
+            {'appid': payload['appid'], 'campaign_id': campaign_id})
+        url = urllib.parse.urljoin(addr, 'campaigns/update')
+        payload['campaign_id'] = campaign_id if payload['campaign_id']=='global_var' else payload['campaign_id']
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            af_cursor = mongodb.sndo['wx.campaign'].find_one(
+                {'appid': payload['appid'], 'campaign_id': payload['campaign_id']})
+            assert af_cursor, 'campaign not found'
+            assert af_cursor['campaign_name'] == payload['campaign_name'] if payload['campaign_name'] else bf_cursor['campaign_name']
+            assert af_cursor['configured_status'] == payload['configured_status'] if payload['configured_status'] else bf_cursor['configured_status']
+            assert str(af_cursor['daily_budget']) == str(payload['daily_budget']) if str(
+                payload['daily_budget']) else str(bf_cursor['daily_budget'])
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_04_campaigns_delete)
+    def test_04_campaigns_delete(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'campaigns/delete')
+        payload['campaign_id'] = campaign_id if payload['campaign_id']=='global_var' else payload['campaign_id']
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            cursor = mongodb.sndo['wx.campaign'].find_one(
+                {'appid': payload['appid'], 'campaign_id': payload['campaign_id']})
+            assert cursor['is_deleted'], 'delete fail'
+
+@pytest.mark.userfixtures('base')
+class TestWxApiAdgroups(object):
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_01_adgroups_add)
+    def test_01_adgroups_add(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        # create new campaign
+        response = r.req('POST',urllib.parse.urljoin(addr, 'campaigns/add'),json=wx.test_01_campaigns_add[0][0])
+        global campaign_id
+        campaign_id = response['data']['campaign_id']
+        url = urllib.parse.urljoin(addr, 'adgroups/add')
+        payload['campaign_id'] = campaign_id
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            cursor = mongodb.sndo['wx.adgroup'].find_one(
+                {'adgroup_id': response['data']['adgroup_id']})
+            assert cursor, 'adgroup not found'
+            global adgroup_id
+            adgroup = response['data']['adgroup_id']
 
 
 @pytest.mark.usefixtures('base')

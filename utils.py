@@ -12,6 +12,9 @@
 import logging
 import os
 import json
+import configparser
+import random
+import datetime
 from functools import wraps
 import shutil
 import pymongo
@@ -83,6 +86,7 @@ class Requests:
 
     def req(self, method, url, **kwargs):
         try:
+            kwargs['json']={k: v for k, v in kwargs['json'].items() if v is not ''}
             logging.info('request args:{}'.format(kwargs))
             response = requests.request(method, url, **kwargs)
         except requests.exceptions.RequestException as e:
@@ -95,3 +99,29 @@ class Requests:
         except json.decoder.JSONDecodeError as e:
             logging.exception(e)
             assert False, 'decode fail'
+
+class ConfigParser:
+
+    def __init__(self):
+        self.config = configparser.ConfigParser()
+        print(os.path.join(os.getcwd(),'config.ini'))
+        self.config.read(os.path.join(os.getcwd(),'config.ini'))
+    
+    def get_admin_addr(self):
+        return self.config.get('admin','admin_addr')
+    
+    def get_tsa_addr(self):
+        return self.config.get('tsa','tsa_addr')
+    
+    def get_wx_addr(self):
+        return self.config.get('wx','wx_addr')
+
+class DataGenerator:
+
+    @staticmethod
+    def randint():
+        return random.randint(10000,99999)
+
+    @staticmethod
+    def getdate():
+        return datetime.datetime.now().strftime("%Y%m%d%H%M%S")
