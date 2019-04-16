@@ -8,7 +8,7 @@
 @file: utils.py
 @time: 2019/1/6 上午11:26
 '''
-
+import string
 import logging
 import os
 import json
@@ -31,7 +31,7 @@ class Log(object):
     @staticmethod
     def getlog(name=None):
         return logging.getLogger(name)
-    
+
     def logtestcase():
         def decorator(func):
             @wraps(func)
@@ -41,6 +41,7 @@ class Log(object):
                 return func(*args, **kwargs)
             return wrapper
         return decorator
+
 
 class PathParser:
 
@@ -86,7 +87,8 @@ class Requests:
 
     def req(self, method, url, **kwargs):
         try:
-            kwargs['json']={k: v for k, v in kwargs['json'].items() if v is not ''}
+            kwargs['json'] = {k: v for k,
+                              v in kwargs['json'].items() if v is not ''}
             logging.info('request args:{}'.format(kwargs))
             response = requests.request(method, url, **kwargs)
         except requests.exceptions.RequestException as e:
@@ -100,28 +102,34 @@ class Requests:
             logging.exception(e)
             assert False, 'decode fail'
 
+
 class ConfigParser:
 
     def __init__(self):
         self.config = configparser.ConfigParser()
-        print(os.path.join(os.getcwd(),'config.ini'))
-        self.config.read(os.path.join(os.getcwd(),'config.ini'))
-    
+        print(os.path.join(os.getcwd(), 'config.ini'))
+        self.config.read(os.path.join(os.getcwd(), 'config.ini'))
+
     def get_admin_addr(self):
-        return self.config.get('admin','admin_addr')
-    
+        return self.config.get('admin', 'admin_addr')
+
     def get_tsa_addr(self):
-        return self.config.get('tsa','tsa_addr')
-    
+        return self.config.get('tsa', 'tsa_addr')
+
     def get_wx_addr(self):
-        return self.config.get('wx','wx_addr')
+        return self.config.get('wx', 'wx_addr')
+
 
 class DataGenerator:
 
     @staticmethod
     def randint():
-        return random.randint(10000,99999)
+        return random.randint(10000, 99999)
 
     @staticmethod
     def getdate():
         return datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+
+    @staticmethod
+    def randchr(char_len=16):
+        return ''.join(random.sample(string.ascii_letters + string.digits, char_len))

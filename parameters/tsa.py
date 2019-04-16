@@ -162,7 +162,7 @@ test_01_adgroups_add = [({
     'billing_event': 'BILLINGEVENT_CLICK',
     'bid_amount': 1000,
     'optimization_goal': 'OPTIMIZATIONGOAL_CLICK',
-    'targeting_id': 97522,
+    'targeting_id': 'global variable',
     'time_series': ''.join([str(random.randint(0, 1)) for x in range(336)])},
     {'result': True,
      'code': 0,
@@ -179,7 +179,7 @@ test_02_adgroups_update = [({
     'billing_event': 'BILLINGEVENT_CLICK',
     'bid_amount': 1000,
     'optimization_goal': 'OPTIMIZATIONGOAL_CLICK',
-    'targeting_id': 97522,
+    'targeting_id': 'global variable',
     'time_series': ''.join([str(random.randint(0, 1)) for x in range(336)])},
     {'result': True,
      'code': 0,
@@ -235,20 +235,20 @@ test_02_ads_update = [({
     'update_ad')]
 
 test_03_ads_get = [({
-            'account_id': 100006180,
-            'filtering': '',
-            'page': '',
+    'account_id': 100006180,
+    'filtering': '',
+    'page': '',
             'page_size': ''
-        },
+},
     {'result': True,
      'code': 0,
      'msg': ''},
     'get_ad')]
 
 test_04_ads_delete = [({
-            'account_id': 100006180,
-            'ad_id': 'global variable'
-        },
+    'account_id': 100006180,
+    'ad_id': 'global variable'
+},
     {'result': True,
      'code': 0,
      'msg': ''},
@@ -282,14 +282,176 @@ test_02_adcreatives_update = [({
     'adcreative_elements': {'image': '3519', 'title': 'update_title_'.format(dg.randint())},
     'page_type': 'PAGE_TYPE_DEFAULT',
     'page_spec': '',
-    'deep_link_url':'',
-    'share_content_spec':'',
-    'dynamic_adcreative_spec':'',
-    'multi_share_optimization_enabled':''},
+    'deep_link_url': '',
+    'share_content_spec': '',
+    'dynamic_adcreative_spec': '',
+    'multi_share_optimization_enabled': ''},
     {'result': True,
      'code': 0,
      'msg': ''},
     'update_adcreative')]
+
+test_03_adcreatives_get = [({
+    'account_id': 100006180,
+    'filtering': '',
+    'page': '',
+    'page_size': ''},
+    {'result': True,
+     'code': 0,
+     'msg': ''},
+    'get_adcreative')]
+
+test_04_adcreatives_delete = [
+    ({
+        'account_id': 100006180, 'adcreative_id': 'global variable'}, {
+            'result': True, 'code': 0, 'msg': ''}, 'delete_advertiser')]
+
+test_01_targeting_add = [
+    ({
+        'account_id': 100006180, 'targeting_name': 'test_targeting_name_{}'.format(dg.randint()), 'targeting': '', 'description': 'test_description_{}'.format(dg.randint())}, {
+            'result': True, 'code': 0, 'msg': ''}, 'add_targeting')]
+
+test_02_targeting_update = [
+    ({
+        'account_id': 100006180, 'targeting_id': 'gloabl variable', 'targeting_name': 'update_targeting_name_{}'.format(dg.randint()), 'targeting': '', 'description': 'update_description_{}'.format(dg.randint())}, {
+            'result': True, 'code': 0, 'msg': ''}, 'update_targeting')]
+
+test_03_targeting_get = [
+    ({
+        'account_id': 100006180,
+        'filtering': '',
+        'page': '',
+        'page_size': ''}, {
+        'result': True, 'code': 0, 'msg': ''}, 'get_targeting')]
+
+test_01_targeting_tags_get = [
+    ({
+        'type': 'REGION',
+        'tag_spec': ''}, {
+        'result': True, 'code': 0, 'msg': ''}, 'get_targeting_tags')]
+
+test_01_capabilities_get = [
+    ({
+        'account_id': 100006180,
+        'capability': 'CAPABILITY_WECHAT_ECOMMERCE_PRODUCT',
+        'query_spec': ''}, {
+        'result': True, 'code': 0, 'msg': ''}, 'get_capabilities')]
+
+test_01_estimation_get = [
+    ({
+        'account_id': 100006180,
+        'adgroup': '',
+        'adcreative': '',
+        'targeting': {
+            'geo_location': {
+                'location_types': ['RECENTLY_IN'],
+                'regions':[510100]
+            }
+        }
+    }, {
+        'result': True, 'code': 0, 'msg': ''}, 'get_estimation')]
+
+# TODO get the correct the account_id and date
+test_01_realtime_cost_get = [
+    ({
+        'account_id': 100006180,
+        'level': 'ADVERTISER',
+        'date': '2019-4-10',
+        'filtering': '',
+        'page': '',
+        'page_size': ''
+    }, {
+        'result': True, 'code': 0, 'msg': ''}, 'get_realtime_cost')]
+
+test_01_images_add = [
+    ({
+        'account_id': 100006180,
+        'image': 'C:/Users/SNQU/Pictures/github200x200Discount.jpg'
+    }, {
+        'result': True, 'code': 0, 'msg': ''}, 'add_image')]
+
+test_02_images_get = [
+    ({
+        'account_id': 100006180,
+        'filtering': '',
+        'page': '',
+        'page_size': ''
+    }, {
+        'result': True, 'code': 0, 'msg': ''}, 'get_image')]
+
+test_01_video_add = [
+    ({
+        'account_id': 100006180,
+        'video': 'C:/Users/SNQU/Pictures/github200x200Discount.jpg'
+    }, {
+        'result': True, 'code': 0, 'msg': ''}, 'add_video')]
+
+test_02_video_get = [
+    ({
+        'account_id': 100006180,
+        'filtering': '',
+        'page': '',
+        'page_size': ''
+    }, {
+        'result': True, 'code': 0, 'msg': ''}, 'get_video')]
+
+test_01_fund_transfer_add = [
+    ({
+        'account_id': 100006180,
+        'fund_type': 'FUND_TYPE_CASH',
+        'amount': 5000,
+        'transfer_type': 'AGENCY_TO_ADVERTISER',
+        'external_bill_no': 'test_external_bill_{}'.format(dg.randchr()),
+        'memo': 'test_memo_{}'.format(dg.randint())}, {
+        'result': True, 'code': 0, 'msg': ''}, 'add_fund_transfer')]
+
+test_01_funds_get = [
+    ({
+        'account_id': 100006180}, {
+        'result': True, 'code': 0, 'msg': ''}, 'get_funds')
+]
+
+test_01_fund_statements_daily_get = [
+    ({
+        'account_id': 100006180,
+        'fund_type':'FUND_TYPE_CASH',
+        'date_range':{
+            'start_date':'2019-03-10',
+            'end_date':'2019-03-15'
+        },
+        'trade_type':''}, {
+        'result': True, 'code': 0, 'msg': ''}, 'get_fund_statements_daily')
+]
+
+test_01_adcreatives2_add =[
+    ({
+            'account_id': 100006180,
+            'campaign_id': 'global variable',
+            'adcreative_name': 'test_adcreative_name_{}'.format(dg.randint()),
+            'adcreative_template_id': 529,
+            'adcreative_elements': adcreative_elements,
+            'site_set': site_set,
+            'page_spec': page_spec,
+            'promoted_object_type': promoted_object_type,
+            'page_type': page_type,
+            'adgroup_id': adgroup_id,
+            'ad_name': ad_name,
+            'configured_status': configured_status}, {
+        'result': True, 'code': 0, 'msg': ''}, 'add_adcreatives2')
+]
+
+test_01_fund_statements_detailed_get =[
+    ({
+        'account_id': 100006180,
+        'fund_type':'FUND_TYPE_CASH',
+        'date_range':{
+            'start_date':'2019-03-10',
+            'end_date':'2019-03-15'
+        },
+        'page':'',
+        'page_size':''}, {
+        'result': True, 'code': 0, 'msg': ''}, 'get_fund_statements_detailed')
+]
 
 test_01_images_add = [
     (100006180, 'C:/Users/SNQU/Pictures/github200x200Discount.jpg',
@@ -447,5 +609,5 @@ test_23_adcreatives2_delete = [
 
 test_24_qualifications_update = [
     (1553568843, 'INDUSTRY_QUALIFICATION', 10009283,
-     ["3517"], True, 0, '', 'delete_adcreatives')
+     ['3517'], True, 0, '', 'delete_adcreatives')
 ]

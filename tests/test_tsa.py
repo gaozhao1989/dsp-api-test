@@ -3,11 +3,11 @@ import urllib.parse
 import requests
 import pytest
 from parameters import tsa
-from utils import Log, Requests, ConfigParser
+from utils import Log, Requests, ConfigParser, DataGenerator
 
 cp = ConfigParser()
 addr = cp.get_tsa_addr()
-log = Log.getlog('wxTest')
+log = Log.getlog('TsaTest')
 r = Requests()
 # global varibales
 account_id = None
@@ -16,6 +16,8 @@ campaign_id = None
 adgroup_id = None
 adcreative_id = None
 ad_id = None
+targeting_id = None
+external_bill_no = None
 
 
 @pytest.mark.userfixtures('base')
@@ -416,6 +418,15 @@ class TestTsaAdgroups(object):
             global campaign_id
             campaign_id = response['data']['campaign_id']
             payload['campaign_id'] == campaign_id
+        # add new targeting
+        if payload['targeting_id'] == 'global variable':
+            response = r.req(
+                'POST',
+                'targeting/add',
+                json=tsa.test_01_targeting_add[0][0])
+            global targeting_id
+            targeting_id = response['data']['targeting_id']
+            payload['targeting_id'] == targeting_id
         url = urllib.parse.urljoin(addr, 'adgroups/add')
         response = r.req('POST', url, json=payload)
         assert res['code'] == response['code'], 'code not equal'
@@ -450,6 +461,15 @@ class TestTsaAdgroups(object):
             mongodb):
         url = urllib.parse.urljoin(addr, 'adgroups/add')
         payload['adgroup_id'] = adgroup_id if payload['adgroup_id'] == 'global variable' else payload['adgroup_id']
+        # add new targeting
+        if payload['targeting_id'] == 'global variable':
+            response = r.req(
+                'POST',
+                'targeting/add',
+                json=tsa.test_01_targeting_add[0][0])
+            global targeting_id
+            targeting_id = response['data']['targeting_id']
+            payload['targeting_id'] == targeting_id
         response = r.req('POST', url, json=payload)
         assert res['code'] == response['code'], 'code not equal'
         assert res['msg'] == response['message'], 'message not equal'
@@ -685,6 +705,7 @@ class TestTsaAdcreatives(object):
             mongodb):
         url = urllib.parse.urljoin(addr, 'adcreatives/update')
         payload['adcreative_id'] = adcreative_id if payload['adcreative_id'] == 'global variable' else payload['adcreative_id']
+
         response = r.req('POST', url, json=payload)
         assert res['code'] == response['code'], 'code not equal'
         assert res['msg'] == response['message'], 'message not equal'
@@ -720,10 +741,436 @@ class TestTsaAdcreatives(object):
                 key, value = 'adcreative_id', adcreative_id
                 assert str(response).find(
                     "'{}': '{}'".format(
-                        key, value)), 'ad not found' 
+                        key, value)), 'adcreatives not found' 
             else:
                 cursor = mongodb.sndo['tsa.adcreative'].find({'account':tsa.test_03_adcreatives_get[0][0]['account_id']})
-                assert  cursor.count() == response['data']['page_info']['total_number'], ''
+                assert  cursor.count() == response['data']['page_info']['total_number'], 'total number not equal'
+    
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        tsa.test_04_adcreatives_delete)
+    def test_04_adcreatives_delete(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'adcreatives/delete')
+        payload['adcreative_id'] = adcreative_id if payload['adcreative_id'] == 'global variable' else payload['adcreative_id']
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:    
+            cursor = mongodb.sndo['tsa.adcreative'].find_one(
+                {'adcreative_id': payload['adcreative_id']})
+            assert cursor, 'adcreative not found'
+            assert cursor['is_deleted'] == True, 'delete fail'
+    
+@pytest.mark.usefixtures('base')
+class TestTsaTargeting(object):
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        tsa.test_01_targeting_add)
+    def test_01_targeting_add(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'targeting/add')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:  
+            cursor = mongodb.sndo['tsa.targeting'].find_one(
+                {'targeting_id': response['data']['targeting_id']})
+            assert cursor['account_id'] == payload['account_id'], 'account_id not equal'
+            assert cursor['targeting_name'] == payload['targeting_name'], 'targeting_name not equal'
+            assert cursor['targeting'] == payload['targeting'],'targeting not equal'
+            assert cursor['description'] == payload['description'], 'description not equal'
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        tsa.test_02_targeting_update)
+    def test_02_targeting_update(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'targeting/update')
+        payload['targeting_id'] = targeting_id if payload['targeting_id'] == 'global variable' else payload['targeting_id']
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:  
+            cursor = mongodb.sndo['tsa.targeting'].find_one(
+                {'targeting_id': payload['targeting_id']})
+            assert cursor['account_id'] == payload['account_id'], 'account_id not equal'
+            assert cursor['targeting_name'] == payload['targeting_name'], 'targeting_name not equal'
+            assert cursor['targeting'] == payload['targeting'],'targeting not equal'
+            assert cursor['description'] == payload['description'], 'description not equal'
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        tsa.test_03_targeting_get)
+    def test_03_targeting_get(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'targeting/get')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:  
+            if targeting_id:
+                key, value = 'targeting_id', targeting_id
+                assert str(response).find(
+                    "'{}': '{}'".format(
+                        key, value)), 'targeting not found' 
+            else:
+                cursor = mongodb.sndo['tsa.targeting'].find({'account':tsa.test_03_targeting_get[0][0]['account_id']})
+                assert  cursor.count() == response['data']['page_info']['total_number'], 'total number not equal'
+
+@pytest.mark.usefixtures('base')
+class TestTsaTargetingTags(object):
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        tsa.test_01_targeting_tags_get)
+    def test_01_targeting_tags_get(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'targeting_tags/get')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:  
+            for tag in response['data']['list']:
+                cursor = ongodb.sndo['tsa.targeting_tag'].find_one(
+                {'id': tag['id'],'name':tag['name'],'parent_id':tag['parent_id'],'parent_name':tag['parent_name'],'city_level':tag['city_level']})
+                assert cursor, 'targeting_tag not found'
+                assert cursor['type'] == payload['type'], 'type not equal'
+
+@pytest.mark.usefixtures('base')
+class TestTsaCapabilities(object):
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        tsa.test_01_capabilities_get)
+    def test_01_capabilities_get(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'capabilities/get')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+
+@pytest.mark.usefixtures('base')
+class TestTsaEstimation(object):
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        tsa.test_01_estimation_get)
+    def test_01_estimation_get(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'estimation/get')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            assert response['data']['approximate_count'], 'approximate_count error'
+            assert response['data']['impression'], 'impression error'
+            assert response['data']['min_bid_amount'], 'min_bid_amount error'
+            assert response['data']['max_bid_amount'], 'max_bid_amount error'
+
+@pytest.mark.usefixtures('base')
+class TestTsaRealtimeCost(object):
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        tsa.test_01_realtime_cost_get)
+    def test_01_realtime_cost_get(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'realtime_cost/get')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+
+@pytest.mark.usefixtures('base')
+class TestTsaImages(object):
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        tsa.test_01_images_add)
+    def test_01_images_add(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'images/add')
+        files = {'image': open(payload['image'], 'rb') if payload['image'] else ''}
+        payload = {'account_id':payload['account_id']}
+        response = r.req('POST', url, data=payload, files=files)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            cursor = mongodb.sndo['tsa.image'].find_one(
+                {'image_id': response['data']['image_id']})
+            assert cursor, 'image not found'
+            assert cursor['signature'] == response['data']['signature'], 'signature not equal'
+            assert cursor['preview_url'] == response['data']['preview_url'], 'image url not equal'
+            assert cursor['type'] == response['data']['type'], 'type not equal'
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        tsa.test_02_images_get)
+    def test_02_images_get(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'images/get')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            for tag in response['data']['list']:
+                cursor = ongodb.sndo['tsa.image'].find_one(
+                {'image_id': tag['image_id']})
+                assert cursor, 'image not found'
+                assert cursor['signature'] == response['data']['signature'], 'signature not equal'
+                assert cursor['preview_url'] == response['data']['preview_url'], 'preview_url not equal'
+                assert cursor['width'] == response['data']['width'], 'width not equal'
+                assert cursor['height'] == response['data']['height'], 'height not equal'
+                assert cursor['file_size'] == response['data']['file_size'], 'file_size not equal'
+                assert cursor['type'] == response['data']['type'], 'type not equal'
+
+@pytest.mark.usefixtures('base')
+class TestTsaVideo(object):
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        tsa.test_01_video_add)
+    def test_01_video_add(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'video/add')
+        files = {'video': open(payload['video'], 'rb') if payload['video'] else ''}
+        payload = {'account_id':payload['account_id']}
+        response = r.req('POST', url, data=payload, files=files)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            cursor = mongodb.sndo['tsa.video'].find_one(
+                {'video_id': response['data']['video_id']})
+            assert cursor, 'video not found'
+            assert cursor['signature'] == response['data']['signature'], 'signature not equal'
+            assert cursor['preview_url'] == response['data']['preview_url'], 'image url not equal'
+            assert cursor['type'] == response['data']['type'], 'type not equal'
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        tsa.test_02_video_get)
+    def test_02_video_get(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'video/get')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            for tag in response['data']['list']:
+                cursor = ongodb.sndo['tsa.video'].find_one(
+                {'video_id': tag['video_id']})
+                assert cursor, 'video not found'
+                assert cursor['signature'] == response['data']['signature'], 'signature not equal'
+                assert cursor['preview_url'] == response['data']['preview_url'], 'preview_url not equal'
+                assert cursor['width'] == response['data']['width'], 'width not equal'
+                assert cursor['height'] == response['data']['height'], 'height not equal'
+                assert cursor['file_size'] == response['data']['file_size'], 'file_size not equal'
+                assert cursor['type'] == response['data']['type'], 'type not equal'
+
+@pytest.mark.usefixtures('base')            
+class TestTsaFundTransfer(object):
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        tsa.test_01_fund_transfer_add)
+    def test_01_fund_transfer_add(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'fund_transfer/add')
+        # set global variable external_bill_no
+        global external_bill_no
+        if payload['external_bill_no'] == 'global variable':
+            payload['external_bill_no'] = external_bill_no
+            is_repeated = True
+        else:
+            external_bill_no = payload['external_bill_no']
+            is_repeated = False
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            assert response['data']['fund_type'] == payload['fund_type'], 'fund_type not equal'
+            assert response['data']['amount'] == payload['amount'], 'amount not equal'
+            assert response['data']['external_bill_no'] == payload['external_bill_no'], 'external_bill_no not equal'
+            assert response['data']['is_repeated'] == is_repeated, 'is_repeated not equal'
+
+@pytest.mark.usefixtures('base')
+class TestTsaFunds(object):
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        tsa.test_01_funds_get)
+    def test_01_funds_get(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'funds/get')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        #TODO verify response
+
+@pytest.mark.usefixtures('base')
+class TestTsaFundStatementsDaily(object):
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        tsa.test_01_fund_statements_daily_get)
+    def test_01_fund_statements_daily_get(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'fund_statements_daily/get')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        #TODO verify response
+
+@pytest.mark.usefixtures('base')
+class TestTsaFundStatementsDetailed(object):
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        tsa.test_01_fund_statements_detailed_get)
+    def test_01_fund_statements_detailed_get(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'fund_statements_detailed/get')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        #TODO verify response
+
+@pytest.mark.usefixtures('base')
+class TestTsAadcreatives2(object):
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize('payload, res, test_title',
+     tsa.test_01_adcreatives2_add)
+    def test_01_adcreatives2_add(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        url = urllib.parse.urljoin(addr, 'adcreatives2/add')
+        payload = {
+            'account_id': account_id,
+            'campaign_id': campaign_id,
+            'adcreative_name': adcreative_name,
+            'adcreative_template_id': adcreative_template_id,
+            'adcreative_elements': adcreative_elements,
+            'site_set': site_set,
+            'page_spec': page_spec,
+            'promoted_object_type': promoted_object_type,
+            'page_type': page_type,
+            'adgroup_id': adgroup_id,
+            'ad_name': ad_name,
+            'configured_status': configured_status}
+        self.log.info(payload)
+        try:
+            response = json.loads(requests.post(
+                url, headers=headers, json=payload).content)
+        except Exception as e:
+            assert False, 'request fail'
+        self.log.info(response)
+        assert result_code == response['code']
+        assert result_message in response['message']
+        if res_result:
+            cursor_adcreative = mongodb.sndo['tsa.adcreative'].find_one(
+                {'adcreative_id': response['data']['adcreative_id']})
+            assert cursor_adcreative, 'can not found adcreative'
+            cursor_ad = mongodb.sndo['tsa.ad'].find_one(
+                {'ad_id': response['data']['ad_id']})
+            assert cursor_ad, 'can not found ad'
+            requests.post(
+                urllib.parse.urljoin(
+                    self.addr,
+                    'adcreatives2/delete'),
+                headers=headers,
+                json={
+                    'account_id': account_id,
+                    'adcreative_id': response['data']['adcreative_id'],
+                    'ad_id': response['data']['ad_id']})
+            mongodb.sndo['tsa.adcreative'].delete_one(
+                {'adcreative_id': response['data']['adcreative_id']})
+            mongodb.sndo['tsa.ad'].delete_one(
+                {'ad_id': response['data']['ad_id']})
 
 @pytest.mark.usefixtures('base')
 class TestTsaApi(object):
