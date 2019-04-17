@@ -20,7 +20,7 @@ import shutil
 import pymongo
 import requests
 from sshtunnel import SSHTunnelForwarder
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 
 
 class Log(object):
@@ -133,3 +133,10 @@ class DataGenerator:
     @staticmethod
     def randchr(char_len=16):
         return ''.join(random.sample(string.ascii_letters + string.digits, char_len))
+    
+    @staticmethod
+    def drawimage():
+        img = Image.new('RGB',(400,400),color=tuple([random.randint(0,256) for x in range(3)]))
+        draw = ImageDraw.Draw(img)
+        draw.text((20,20),'test image',fill=(255,255,0))
+        img.save('image.png')

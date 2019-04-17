@@ -19,6 +19,10 @@ adcreative_id = None
 ad_id = None
 targeting_id = None
 external_bill_no = None
+image_id = None
+
+def get_image_id(glo=True,payload={}):
+    pass
 
 
 def get_account_id(glo=True, payload={}):
@@ -30,6 +34,7 @@ def get_account_id(glo=True, payload={}):
                 'POST',
                 url,
                 json=tsa.test_01_advertiser_add[0][0])
+            print('the response is:{}'.format(response)) 
             if glo:
                 account_id = response['data']['account_id']
         return account_id
@@ -1153,7 +1158,7 @@ class TestTsaImages(object):
         assert res['msg'] == response['message'], 'message not equal'
         if res['result']:
             for tag in response['data']['list']:
-                cursor = ongodb.sndo['tsa.image'].find_one(
+                cursor = mongodb.sndo['tsa.image'].find_one(
                     {'image_id': tag['image_id']})
                 assert cursor, 'image not found'
                 assert cursor['signature'] == response['data']['signature'], 'signature not equal'
