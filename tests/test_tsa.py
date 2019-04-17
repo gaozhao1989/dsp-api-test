@@ -25,9 +25,10 @@ def get_account_id(glo=True, payload={}):
     if payload['account_id'] == 'global variable':
         global account_id
         if account_id is None:
+            url = urllib.parse.urljoin(addr, 'advertiser/add')
             response = r.req(
                 'POST',
-                'advertiser/add',
+                url,
                 json=tsa.test_01_advertiser_add[0][0])
             if glo:
                 account_id = response['data']['account_id']
@@ -42,9 +43,10 @@ def get_qualification_id(glo=True, payload={}):
         if qualification_id is None:
             add_qua_payload = tsa.test_01_qualifications_add[0][0]
             add_qua_payload['account_id'] = get_account_id()
+            url = urllib.parse.urljoin(addr, 'qualifications/add')
             response = r.req(
                 'POST',
-                'qualifications/add',
+                url,
                 json=add_qua_payload)
             if glo:
                 qualification_id = response['data']['qualification_id']
@@ -59,9 +61,10 @@ def get_campaign_id(glo=True, payload={}):
         if campaign_id is None:
             add_cam_payload = tsa.test_01_campaigns_add[0][0]
             add_cam_payload['account_id'] = get_account_id()
+            url = urllib.parse.urljoin(addr, 'campaigns/add')
             response = r.req(
                 'POST',
-                'campaigns/add',
+                url,
                 json=add_cam_payload)
             if glo:
                 campaign_id = response['data']['campaign_id']
@@ -76,9 +79,10 @@ def get_targeting_id(glo=True, payload={}):
         if targeting_id is None:
             add_targeting_payload = tsa.test_01_targeting_add[0][0]
             add_targeting_payload['account_id'] = get_account_id()
+            url = urllib.parse.urljoin(addr, 'targeting/add')
             response = r.req(
                 'POST',
-                'targeting/add',
+                url,
                 json=add_targeting_payload)
             if glo:
                 targeting_id = response['data']['targeting_id']
@@ -95,9 +99,10 @@ def get_adgroup_id(glo=True, payload={}):
             add_adgroup_payload['account_id'] = get_account_id()
             add_adgroup_payload['campaign_id'] = get_campaign_id()
             add_adgroup_payload['targeting_id'] = get_targeting_id()
+            url = urllib.parse.urljoin(addr, 'adgroups/add')
             response = r.req(
                 'POST',
-                'adgroups/add',
+                url,
                 json=add_adgroup_payload)
             if glo:
                 adgroup_id = response['data']['adgroup_id']
@@ -113,9 +118,10 @@ def get_adcreative_id(glo=True, payload={}):
             add_adcreative_payload = tsa.test_01_adcreatives_add[0][0]
             add_adcreative_payload['account_id'] = get_account_id()
             add_adcreative_payload['campaign_id'] = get_campaign_id()
+            url = urllib.parse.urljoin(addr, 'adcreatives/add')
             response = r.req(
                 'POST',
-                'adcreatives/add',
+                url,
                 json=add_adcreative_payload)
             if glo:
                 adcreative_id = response['data']['adcreative_id']
@@ -132,9 +138,10 @@ def get_ad_id(glo=True, payload={}):
             add_ad_payload['account_id'] = get_account_id()
             add_ad_payload['adgroup_id'] = get_adgroup_id()
             add_ad_payload['adcreative_id'] = get_adcreative_id()
+            url = urllib.parse.urljoin(addr, 'ads/add')
             response = r.req(
                 'POST',
-                'ads/add',
+                url,
                 json=add_ad_payload)
             if glo:
                 ad_id = response['data']['ad_id']
@@ -162,7 +169,7 @@ class TestTsaInd(object):
         assert res['msg'] == response['message'], 'message not equal'
         if res['result']:
             for tag in response['data']:
-                cursor = ongodb.sndo['tsa.industry'].find_one(
+                cursor = mongodb.sndo['tsa.industry'].find_one(
                     {'_id': tag['_id']})
                 assert cursor, 'industry not found'
                 assert cursor['describe'] == tag['describe'], 'describe not equal'
