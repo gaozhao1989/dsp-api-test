@@ -19,10 +19,6 @@ adcreative_id = None
 ad_id = None
 targeting_id = None
 external_bill_no = None
-image_id = None
-
-def get_image_id(glo=True,payload={}):
-    pass
 
 
 def get_account_id(glo=True, payload={'account_id':'global variable'}):

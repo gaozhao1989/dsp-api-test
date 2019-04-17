@@ -31,7 +31,7 @@ test_01_advertiser_add = [
     ({
         'corporation_name': 'test_corportaion_name_{}'.format(
             dg.randint()),
-        'certification_image_id': '3670',
+        'certification_image_id': '2873',
         'system_industry_id': 21474836581,
         'introduction_url': '',
         'individual_qualification': '',
@@ -380,7 +380,7 @@ test_01_realtime_cost_get = [
 test_01_images_add = [
     ({
         'account_id': 'global variable',
-        'image': 'C:/Users/SNQU/Pictures/github200x200Discount.jpg'
+        'image': dg.drawimage()
     }, {
         'result': True, 'code': 0, 'msg': ''}, 'add_image')]
 

@@ -140,3 +140,5 @@ class DataGenerator:
         draw = ImageDraw.Draw(img)
         draw.text((20,20),'test image',fill=(255,255,0))
         img.save('image.png')
+        path = PathParser()
+        return path.path_join(path.get_workspace_root_path(),'image.png')
