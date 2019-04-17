@@ -25,7 +25,7 @@ def get_image_id(glo=True,payload={}):
     pass
 
 
-def get_account_id(glo=True, payload={}):
+def get_account_id(glo=True, payload=tsa.test_01_advertiser_add[0][0]):
     if payload['account_id'] == 'global variable':
         global account_id
         if account_id is None:
@@ -33,8 +33,7 @@ def get_account_id(glo=True, payload={}):
             response = r.req(
                 'POST',
                 url,
-                json=tsa.test_01_advertiser_add[0][0])
-            print('the response is:{}'.format(response)) 
+                json=payload)
             if glo:
                 account_id = response['data']['account_id']
         return account_id
@@ -214,7 +213,7 @@ class TestTsaADCreativeTemplates(object):
             res,
             test_title,
             mongodb):
-        payload['account'] = get_account_id(payload=payload)
+        payload['account'] = get_account_id()
         url = urllib.parse.urljoin(addr, 'adcreative_templates/get')
         response = r.req('POST', url, json=payload)
         assert res['code'] == response['code'], 'code not equal'
