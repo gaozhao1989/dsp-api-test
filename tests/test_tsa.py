@@ -25,7 +25,7 @@ def get_image_id(glo=True,payload={}):
     pass
 
 
-def get_account_id(glo=True, payload=tsa.test_01_advertiser_add[0][0]):
+def get_account_id(glo=True, payload={'account_id':'global variable'}):
     if payload['account_id'] == 'global variable':
         global account_id
         if account_id is None:
@@ -33,7 +33,7 @@ def get_account_id(glo=True, payload=tsa.test_01_advertiser_add[0][0]):
             response = r.req(
                 'POST',
                 url,
-                json=payload)
+                json=tsa.test_01_advertiser_add[0][0])
             if glo:
                 account_id = response['data']['account_id']
         return account_id
@@ -41,12 +41,12 @@ def get_account_id(glo=True, payload=tsa.test_01_advertiser_add[0][0]):
         return payload['account_id']
 
 
-def get_qualification_id(glo=True, payload={}):
+def get_qualification_id(glo=True, payload={'qualification_id':'global variable'}):
     if payload['qualification_id'] == 'global variable':
         global qualification_id
         if qualification_id is None:
             add_qua_payload = tsa.test_01_qualifications_add[0][0]
-            add_qua_payload['account_id'] = get_account_id()
+            add_qua_payload['account_id'] = get_account_id(payload=add_qua_payload)
             url = urllib.parse.urljoin(addr, 'qualifications/add')
             response = r.req(
                 'POST',
@@ -59,12 +59,12 @@ def get_qualification_id(glo=True, payload={}):
         return payload['qualification_id']
 
 
-def get_campaign_id(glo=True, payload={}):
+def get_campaign_id(glo=True, payload={'campaign_id':'global variable'}):
     if payload['campaign_id'] == 'global variable':
         global campaign_id
         if campaign_id is None:
             add_cam_payload = tsa.test_01_campaigns_add[0][0]
-            add_cam_payload['account_id'] = get_account_id()
+            add_cam_payload['account_id'] = get_account_id(payload=add_cam_payload)
             url = urllib.parse.urljoin(addr, 'campaigns/add')
             response = r.req(
                 'POST',
@@ -77,12 +77,12 @@ def get_campaign_id(glo=True, payload={}):
         return payload['campaign_id']
 
 
-def get_targeting_id(glo=True, payload={}):
+def get_targeting_id(glo=True, payload={'targeting_id':'global variable'}):
     if payload['targeting_id'] == 'globale variable':
         global targeting_id
         if targeting_id is None:
             add_targeting_payload = tsa.test_01_targeting_add[0][0]
-            add_targeting_payload['account_id'] = get_account_id()
+            add_targeting_payload['account_id'] = get_account_id(payload=add_targeting_payload)
             url = urllib.parse.urljoin(addr, 'targeting/add')
             response = r.req(
                 'POST',
@@ -95,14 +95,14 @@ def get_targeting_id(glo=True, payload={}):
         return payload['targeting_id']
 
 
-def get_adgroup_id(glo=True, payload={}):
+def get_adgroup_id(glo=True, payload={'adgroup_id':'global variable'}):
     if payload['adgroup_id'] == 'global variable':
         global adgroup_id
         if adgroup_id is None:
             add_adgroup_payload = tsa.test_01_adgroups_add[0][0]
-            add_adgroup_payload['account_id'] = get_account_id()
-            add_adgroup_payload['campaign_id'] = get_campaign_id()
-            add_adgroup_payload['targeting_id'] = get_targeting_id()
+            add_adgroup_payload['account_id'] = get_account_id(payload=add_adgroup_payload)
+            add_adgroup_payload['campaign_id'] = get_campaign_id(payload=add_adgroup_payload)
+            add_adgroup_payload['targeting_id'] = get_targeting_id(payload=add_adgroup_payload)
             url = urllib.parse.urljoin(addr, 'adgroups/add')
             response = r.req(
                 'POST',
@@ -115,13 +115,13 @@ def get_adgroup_id(glo=True, payload={}):
         return payload['adgroup_id']
 
 
-def get_adcreative_id(glo=True, payload={}):
+def get_adcreative_id(glo=True, payload={'adcreative_id':'global variable'}):
     if payload['adcreative_id'] == 'global variable':
         global adcreative_id
         if adcreative_id is None:
             add_adcreative_payload = tsa.test_01_adcreatives_add[0][0]
-            add_adcreative_payload['account_id'] = get_account_id()
-            add_adcreative_payload['campaign_id'] = get_campaign_id()
+            add_adcreative_payload['account_id'] = get_account_id(payload=add_adcreative_payload)
+            add_adcreative_payload['campaign_id'] = get_campaign_id(payload=add_adcreative_payload)
             url = urllib.parse.urljoin(addr, 'adcreatives/add')
             response = r.req(
                 'POST',
@@ -134,14 +134,14 @@ def get_adcreative_id(glo=True, payload={}):
         return payload['adcreative_id']
 
 
-def get_ad_id(glo=True, payload={}):
+def get_ad_id(glo=True, payload={'ad_id':'global variable'}):
     if payload['ad_id'] == 'global variable':
         global ad_id
         if ad_id is None:
             add_ad_payload = tsa.test_01_ads_add[0][0]
-            add_ad_payload['account_id'] = get_account_id()
-            add_ad_payload['adgroup_id'] = get_adgroup_id()
-            add_ad_payload['adcreative_id'] = get_adcreative_id()
+            add_ad_payload['account_id'] = get_account_id(payload=add_ad_payload)
+            add_ad_payload['adgroup_id'] = get_adgroup_id(payload=add_ad_payload)
+            add_ad_payload['adcreative_id'] = get_adcreative_id(payload=add_ad_payload)
             url = urllib.parse.urljoin(addr, 'ads/add')
             response = r.req(
                 'POST',
@@ -213,7 +213,7 @@ class TestTsaADCreativeTemplates(object):
             res,
             test_title,
             mongodb):
-        payload['account'] = get_account_id()
+        payload['account'] = get_account_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'adcreative_templates/get')
         response = r.req('POST', url, json=payload)
         assert res['code'] == response['code'], 'code not equal'
