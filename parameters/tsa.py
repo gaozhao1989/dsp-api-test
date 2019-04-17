@@ -16,7 +16,7 @@ test_01_qua_get = [({},
                      'msg': ''},
                     'qua_list')]
 
-test_01_adcreative_templates_get = [({'account_id': 100006180,
+test_01_adcreative_templates_get = [({'account_id': 'global variable',
                                       'page': '',
                                       'page_size': '',
                                       'site_set': '',
@@ -65,18 +65,26 @@ test_02_advertiser_update = [({'account_id': 'global variable',
 
 test_03_advertiser_get = [
     ({
-        'account_id': 100006180, 'page': '', 'page_size': '', 'filtering': ''}, {
+        'account_id': 'global variable', 'page': '', 'page_size': '', 'filtering': ''}, {
             'result': True, 'code': 0, 'msg': ''}, 'get_advertiser'), ({}, {
                 'result': True, 'code': 0, 'msg': ''}, 'get_all_advertiser')]
 
 test_01_qualifications_add = [
     ({
-        'account_id': 100006180, 'qualification_type': 'INDUSTRY_QUALIFICATION', 'qualification_spec': {
+        'account_id': 'global variable',
+        'qualification_type': 'INDUSTRY_QUALIFICATION',
+        'qualification_spec': {
             'industry_spec': {
-                'system_industry_id': 21474836586, 'qualification_code': 'A150', 'image_id_list': ['3512']}}}, {
-                    'result': True, 'code': 0, 'msg': ''}, 'add_qualification')]
+                'system_industry_id': 21474836586,
+                'qualification_code': 'A150',
+                'image_id_list': ['3512']}}},
+     {
+        'result': True,
+        'code': 0,
+        'msg': ''},
+     'add_qualification')]
 
-test_02_qualifications_update = [({'account_id': 100006180,
+test_02_qualifications_update = [({'account_id': 'global variable',
                                    'qualification_type': 'INDUSTRY_QUALIFICATION',
                                    'qualification_id': 'global variable',
                                    'image_id_list': ['3517']},
@@ -86,7 +94,7 @@ test_02_qualifications_update = [({'account_id': 100006180,
                                   'update_qualification')]
 
 test_03_qualifications_get = [({
-    'account_id': 100006180,
+    'account_id': 'global variable',
     'qualification_type': 'INDUSTRY_QUALIFICATION',
     'filtering': '',
     'fields': ''},
@@ -96,7 +104,7 @@ test_03_qualifications_get = [({
     'get_qualification')]
 
 test_04_qualifications_delete = [({
-    'account_id': 100006180,
+    'account_id': 'global variable',
     'qualification_type': 'INDUSTRY_QUALIFICATION',
     'qualification_id': 'global variable'},
     {'result': True,
@@ -105,7 +113,7 @@ test_04_qualifications_delete = [({
     'delete_qualification')]
 
 test_01_campaigns_add = [({
-    'account_id': 100006180,
+    'account_id': 'global variable',
     'campaign_name': 'test_campaign_name_{}'.format(dg.randint()),
     'campaign_type': 'CAMPAIGN_TYPE_NORMAL',
     'promoted_object_type': 'PROMOTED_OBJECT_TYPE_LINK',
@@ -119,7 +127,7 @@ test_01_campaigns_add = [({
     'add_campaign')]
 
 test_02_campaigns_update = [({
-    'account_id': 100006180,
+    'account_id': 'global variable',
     'campaign_id': 'global variable',
     'campaign_name': 'update_campaign_name_{}'.format(dg.randint()),
     'daily_budget': '',
@@ -132,7 +140,7 @@ test_02_campaigns_update = [({
     'update_campaign')]
 
 test_03_campaigns_get = [({
-    'account_id': 100006180,
+    'account_id': 'global variable',
     'filtering': '',
     'page': '',
             'page_size': ''
@@ -143,7 +151,7 @@ test_03_campaigns_get = [({
     'get_campaign')]
 
 test_04_campaigns_delete = [({
-    'account_id': 100006180,
+    'account_id': 'global variable',
     'campaign_id': 'global variable'
 },
     {'result': True,
@@ -152,7 +160,7 @@ test_04_campaigns_delete = [({
     'delete_campaign')]
 
 test_01_adgroups_add = [({
-    'account_id': 100006180,
+    'account_id': 'global variable',
     'campaign_id': 'global variable',
     'adgroup_name': 'test_adgroup_name_{}'.format(dg.randint()),
     'site_set': ['SITE_SET_QZONE'],
@@ -170,7 +178,7 @@ test_01_adgroups_add = [({
     'add_adgroup')]
 
 test_02_adgroups_update = [({
-    'account_id': 100006180,
+    'account_id': 'global variable',
     'adgroup_id': 'global variable',
     'adgroup_name': 'update_adgroup_name_{}'.format(dg.randint()),
     'promoted_object_type': 'PROMOTED_OBJECT_TYPE_LINK',
@@ -187,7 +195,7 @@ test_02_adgroups_update = [({
     'update_adgroup')]
 
 test_03_adgroups_get = [({
-    'account_id': 100006180,
+    'account_id': 'global variable',
     'filtering': '',
     'page': '',
             'page_size': ''
@@ -198,7 +206,7 @@ test_03_adgroups_get = [({
     'get_adgroup')]
 
 test_04_adgroups_delete = [({
-    'account_id': 100006180,
+    'account_id': 'global variable',
     'adgroup_id': 'global variable'
 },
     {'result': True,
@@ -207,7 +215,7 @@ test_04_adgroups_delete = [({
     'delete_adgroup')]
 
 test_01_ads_add = [({
-    'account_id': 100006180,
+    'account_id': 'global variable',
     'adgroup_id': 'global variable',
     'adcreative_id': 'global variable',
     'ad_name': 'test_ad_name_{}'.format(dg.randint()),
@@ -222,7 +230,7 @@ test_01_ads_add = [({
     'add_ad')]
 
 test_02_ads_update = [({
-    'account_id': 100006180,
+    'account_id': 'global variable',
     'ad_id': 'global variable',
     'ad_name': 'update_ad_name_{}'.format(dg.randint()),
     'configured_status': '',
@@ -235,7 +243,7 @@ test_02_ads_update = [({
     'update_ad')]
 
 test_03_ads_get = [({
-    'account_id': 100006180,
+    'account_id': 'global variable',
     'filtering': '',
     'page': '',
             'page_size': ''
@@ -246,7 +254,7 @@ test_03_ads_get = [({
     'get_ad')]
 
 test_04_ads_delete = [({
-    'account_id': 100006180,
+    'account_id': 'global variable',
     'ad_id': 'global variable'
 },
     {'result': True,
@@ -255,9 +263,9 @@ test_04_ads_delete = [({
     'delete_ad')]
 
 test_01_adcreatives_add = [({
-    'account_id': 100006180,
+    'account_id': 'global variable',
     'campaign_id': 'global variable',
-    'adcreative_name': 'test_adcreative_name_{}'.format(gd.randint()),
+    'adcreative_name': 'test_adcreative_name_{}'.format(dg.randint()),
     'adcreative_template_id': 529,
     'adcreative_elements': {'image': '3519', 'title': 'test_title_'.format(dg.randint())},
     'site_set': ['SITE_SET_QQCLIENT'],
@@ -276,9 +284,9 @@ test_01_adcreatives_add = [({
     'add_adcreative')]
 
 test_02_adcreatives_update = [({
-    'account_id': 100006180,
+    'account_id': 'global variable',
     'adcreative_id': 'global variable',
-    'adcreative_name': 'update_adcreative_name_{}'.format(gd.randint()),
+    'adcreative_name': 'update_adcreative_name_{}'.format(dg.randint()),
     'adcreative_elements': {'image': '3519', 'title': 'update_title_'.format(dg.randint())},
     'page_type': 'PAGE_TYPE_DEFAULT',
     'page_spec': '',
@@ -292,7 +300,7 @@ test_02_adcreatives_update = [({
     'update_adcreative')]
 
 test_03_adcreatives_get = [({
-    'account_id': 100006180,
+    'account_id': 'global variable',
     'filtering': '',
     'page': '',
     'page_size': ''},
@@ -303,22 +311,29 @@ test_03_adcreatives_get = [({
 
 test_04_adcreatives_delete = [
     ({
-        'account_id': 100006180, 'adcreative_id': 'global variable'}, {
+        'account_id': 'global variable', 'adcreative_id': 'global variable'}, {
             'result': True, 'code': 0, 'msg': ''}, 'delete_advertiser')]
 
 test_01_targeting_add = [
     ({
-        'account_id': 100006180, 'targeting_name': 'test_targeting_name_{}'.format(dg.randint()), 'targeting': '', 'description': 'test_description_{}'.format(dg.randint())}, {
-            'result': True, 'code': 0, 'msg': ''}, 'add_targeting')]
+        'account_id': 'global variable', 'targeting_name': 'test_targeting_name_{}'.format(
+            dg.randint()), 'targeting': '', 'description': 'test_description_{}'.format(
+                dg.randint())}, {
+        'result': True, 'code': 0, 'msg': ''}, 'add_targeting')]
 
-test_02_targeting_update = [
-    ({
-        'account_id': 100006180, 'targeting_id': 'gloabl variable', 'targeting_name': 'update_targeting_name_{}'.format(dg.randint()), 'targeting': '', 'description': 'update_description_{}'.format(dg.randint())}, {
-            'result': True, 'code': 0, 'msg': ''}, 'update_targeting')]
+test_02_targeting_update = [({'account_id': 'global variable',
+                              'targeting_id': 'gloabl variable',
+                              'targeting_name': 'update_targeting_name_{}'.format(dg.randint()),
+                              'targeting': '',
+                              'description': 'update_description_{}'.format(dg.randint())},
+                             {'result': True,
+                              'code': 0,
+                              'msg': ''},
+                             'update_targeting')]
 
 test_03_targeting_get = [
     ({
-        'account_id': 100006180,
+        'account_id': 'global variable',
         'filtering': '',
         'page': '',
         'page_size': ''}, {
@@ -332,14 +347,14 @@ test_01_targeting_tags_get = [
 
 test_01_capabilities_get = [
     ({
-        'account_id': 100006180,
+        'account_id': 'global variable',
         'capability': 'CAPABILITY_WECHAT_ECOMMERCE_PRODUCT',
         'query_spec': ''}, {
         'result': True, 'code': 0, 'msg': ''}, 'get_capabilities')]
 
 test_01_estimation_get = [
     ({
-        'account_id': 100006180,
+        'account_id': 'global variable',
         'adgroup': '',
         'adcreative': '',
         'targeting': {
@@ -351,10 +366,9 @@ test_01_estimation_get = [
     }, {
         'result': True, 'code': 0, 'msg': ''}, 'get_estimation')]
 
-# TODO get the correct the account_id and date
 test_01_realtime_cost_get = [
     ({
-        'account_id': 100006180,
+        'account_id': 'global variable',
         'level': 'ADVERTISER',
         'date': '2019-4-10',
         'filtering': '',
@@ -365,14 +379,14 @@ test_01_realtime_cost_get = [
 
 test_01_images_add = [
     ({
-        'account_id': 100006180,
+        'account_id': 'global variable',
         'image': 'C:/Users/SNQU/Pictures/github200x200Discount.jpg'
     }, {
         'result': True, 'code': 0, 'msg': ''}, 'add_image')]
 
 test_02_images_get = [
     ({
-        'account_id': 100006180,
+        'account_id': 'global variable',
         'filtering': '',
         'page': '',
         'page_size': ''
@@ -381,14 +395,14 @@ test_02_images_get = [
 
 test_01_video_add = [
     ({
-        'account_id': 100006180,
+        'account_id': 'global variable',
         'video': 'C:/Users/SNQU/Pictures/github200x200Discount.jpg'
     }, {
         'result': True, 'code': 0, 'msg': ''}, 'add_video')]
 
 test_02_video_get = [
     ({
-        'account_id': 100006180,
+        'account_id': 'global variable',
         'filtering': '',
         'page': '',
         'page_size': ''
@@ -397,7 +411,7 @@ test_02_video_get = [
 
 test_01_fund_transfer_add = [
     ({
-        'account_id': 100006180,
+        'account_id': 'global variable',
         'fund_type': 'FUND_TYPE_CASH',
         'amount': 5000,
         'transfer_type': 'AGENCY_TO_ADVERTISER',
@@ -407,207 +421,89 @@ test_01_fund_transfer_add = [
 
 test_01_funds_get = [
     ({
-        'account_id': 100006180}, {
+        'account_id': 'global variable'}, {
         'result': True, 'code': 0, 'msg': ''}, 'get_funds')
 ]
 
 test_01_fund_statements_daily_get = [
     ({
-        'account_id': 100006180,
-        'fund_type':'FUND_TYPE_CASH',
-        'date_range':{
-            'start_date':'2019-03-10',
-            'end_date':'2019-03-15'
+        'account_id': 'global variable',
+        'fund_type': 'FUND_TYPE_CASH',
+        'date_range': {
+            'start_date': '2019-03-10',
+            'end_date': '2019-03-15'
         },
-        'trade_type':''}, {
+        'trade_type': ''}, {
         'result': True, 'code': 0, 'msg': ''}, 'get_fund_statements_daily')
 ]
 
-test_01_adcreatives2_add =[
+test_01_fund_statements_detailed_get = [
     ({
-            'account_id': 100006180,
-            'campaign_id': 'global variable',
-            'adcreative_name': 'test_adcreative_name_{}'.format(dg.randint()),
-            'adcreative_template_id': 529,
-            'adcreative_elements': adcreative_elements,
-            'site_set': site_set,
-            'page_spec': page_spec,
-            'promoted_object_type': promoted_object_type,
-            'page_type': page_type,
-            'adgroup_id': adgroup_id,
-            'ad_name': ad_name,
-            'configured_status': configured_status}, {
-        'result': True, 'code': 0, 'msg': ''}, 'add_adcreatives2')
-]
-
-test_01_fund_statements_detailed_get =[
-    ({
-        'account_id': 100006180,
-        'fund_type':'FUND_TYPE_CASH',
-        'date_range':{
-            'start_date':'2019-03-10',
-            'end_date':'2019-03-15'
+        'account_id': 'global variable',
+        'fund_type': 'FUND_TYPE_CASH',
+        'date_range': {
+            'start_date': '2019-03-10',
+            'end_date': '2019-03-15'
         },
-        'page':'',
-        'page_size':''}, {
+        'page': '',
+        'page_size': ''}, {
         'result': True, 'code': 0, 'msg': ''}, 'get_fund_statements_detailed')
 ]
 
-test_01_images_add = [
-    (100006180, 'C:/Users/SNQU/Pictures/github200x200Discount.jpg',
-     True, 0, '', 'create_image')
+test_01_adcreatives2_add = [
+    ({
+        'account_id': 'global variable',
+        'campaign_id': 'global variable',
+        'adcreative_name': 'test_adcreative_name_{}'.format(dg.randint()),
+        'adcreative_template_id': 529,
+        'adcreative_elements': {'image': '3519', 'title': 'test_title_{}'.format(dg.randint())},
+        'site_set': ['SITE_SET_QQCLIENT'],
+        'page_spec': {'page_id': 0,
+                      'page_url': 'https://www.example.com'},
+        'promoted_object_type': 'PROMOTED_OBJECT_TYPE_LINK',
+        'page_type': 'PAGE_TYPE_DEFAULT',
+        'adgroup_id': 'global variable',
+        'ad_name': 'test_ad_name_{}'.format(dg.randint()),
+        'configured_status': 'AD_STATUS_SUSPEND',
+        'deep_link_url': '',
+        'promoted_object_id': '',
+        'share_content_spec': '',
+        'dynamic_adcreative_spec': '',
+        'multi_share_optimization_enabled': '',
+        'adcreative_id': '',
+        'impression_tracking_url': '',
+        'click_tracking_url': '',
+        'feeds_interaction_enabled': '',
+        'sndo_ader_id': ''}, {
+        'result': True, 'code': 0, 'msg': ''}, 'add_adcreatives2')
 ]
 
-test_02_advertiser_add = [
-    ('test0326001', '3670', 21474836581, '', '', '',
-     '', '', '', '', '', True, 0, '', 'create_account')
+test_02_adcreatives2_update = [
+    ({
+        'account_id': 'global variable',
+        'adcreative_id': 'global variable',
+        'adcreative_name': 'update_adcreative_name_{}'.format(dg.randint()),
+        'adcreative_elements': {'image': '3519', 'title': 'update_title_{}'.format(dg.randint())},
+        'page_spec': {'page_id': 0,
+                      'page_url': 'https://www.example.com'},
+        'page_type': 'PAGE_TYPE_DEFAULT',
+        'deep_link_url': '',
+        'share_content_spec': '',
+        'dynamic_adcreative_spec': '',
+        'multi_share_optimization_enabled': '',
+        'ad_id': 'global variable',
+        'ad_name': 'update_ad_name_{}'.format(dg.randint()),
+        'configured_status': 'AD_STATUS_SUSPEND',
+        'impression_tracking_url': '',
+        'click_tracking_url': '',
+        'feeds_interaction_enabled': ''}, {
+        'result': True, 'code': 0, 'msg': ''}, 'update_adcreatives2')
 ]
 
-test_03_campaigns_add = [
-    (100006180,
-     'api_test_plan',
-     'CAMPAIGN_TYPE_NORMAL',
-     'PROMOTED_OBJECT_TYPE_LINK',
-     100000,
-     'AD_STATUS_SUSPEND',
-     '',
-     '',
-     True,
-     0,
-     '',
-     'create_campaign')]
-
-test_04_adgroups_add = [(100006180,
-                         29131,
-                         'test_group',
-                         ['SITE_SET_QZONE'],
-                         'PROMOTED_OBJECT_TYPE_LINK',
-                         '2019-03-07',
-                         '',
-                         'BILLINGEVENT_CLICK',
-                         1000,
-                         'OPTIMIZATIONGOAL_CLICK',
-                         97522,
-                         ''.join([str(random.randint(0,
-                                                     1)) for x in range(336)]),
-                         True,
-                         0,
-                         '',
-                         'create_adgroup')]
-
-test_05_adcreatives2_add = [(100006180,
-                             29131,
-                             'test_adcreative_name',
-                             529,
-                             {'image': '3519',
-                              'title': 'test title'},
-                             ['SITE_SET_QQCLIENT'],
-                             {'page_id': 0,
-                              'page_url': 'https://www.qq.com'},
-                             'PROMOTED_OBJECT_TYPE_LINK',
-                             'PAGE_TYPE_DEFAULT',
-                             41887,
-                             'test_ad_name',
-                             'AD_STATUS_SUSPEND',
-                             True,
-                             0,
-                             '',
-                             'create_adcreatives')]
-
-test_06_promoted_objects_add = [
-    (100006180, 'PROMOTED_OBJECT_TYPE_APP_IOS',
-     '1456102515', True, 0, '', 'create_promoted_objects')
-]
-
-test_07_targeting_add = [
-    (100006180, 'targeting_name_{}'.format(random.randint(
-        1000, 9999)), True, 0, '', 'create_targeting')
-]
-
-test_08_advertiser_get = [
-    ('', '', '', '', True, 0, '', 'get_advertiser_all'),
-    (100006180, '', '', '', True, 0, '', 'get_advertiser_by_account_id'),
-]
-
-test_09_campaigns_get = [
-    (100006180, '', '', '', True, 0, '', 'get_campaigns_by_account_id'),
-]
-
-test_10_images_get = [
-    (100006180, '', '', '', True, 0, '', 'get_images_by_account_id'),
-]
-
-test_11_targeting_get = [
-    (100006180, '', '', '', True, 0, '', 'get_targeting_by_account_id'),
-]
-
-test_12_estimation_get = [(100006180,
-                           '',
-                           '',
-                           {'geo_location': {'location_types': ['RECENTLY_IN'],
-                                             'regions':[510100]}},
-                           True,
-                           0,
-                           '',
-                           'get_estimation_by_account_id_and_targeting'),
-                          ]
-
-test_13_ads_add = [
-    (100006180, 41869, 64019, 'test_ad_{}'.format(random.randint(
-        1000, 9999)), '', '', '', '', '', True, 0, '', 'create_add'),
-]
-
-test_14_adgroups_get = [
-    (100006180, '', '', '', True, 0, '', 'get_adgroups_by_account_id'),
-]
-
-test_15_adcreatives_get = [
-    (100006180, '', '', '', True, 0, '', 'get_adcreatives_by_account_id'),
-]
-
-test_16_adcreative_templates_get = [
-    (100006180, '', '', '', '', '', True, 0, '',
-     'get_adcreative_templates_by_account_id'),
-]
-
-test_17_funds_get = [
-    (100006180, True, 0, '', 'get_adcreatives_by_account_id'),
-]
-
-test_18_fund_transfer_add = [
-    (100006180, 'FUND_TYPE_CASH', 5000, 'AGENCY_TO_ADVERTISER',
-     '', '', True, 0, '', 'fund_transfer_add')
-]
-
-test_19_ads_get = [
-    (100006180, True, 0, '', 'get_ads_by_account_id'),
-]
-
-test_20_qualifications_get = [
-    (1553568843, 'INDUSTRY_QUALIFICATION', '', '',
-     True, 0, '', 'get_qualifications_by_account_id')
-]
-
-test_21_qualifications_delete = [
-    (1553568843, 'INDUSTRY_QUALIFICATION', 10009282,
-     True, 0, '', 'delete_qualifications')
-]
-
-test_22_qualifications_add = [(1553568843,
-                               'INDUSTRY_QUALIFICATION',
-                               {'industry_spec': {'system_industry_id': 21474836586,
-                                                  'qualification_code': 'A150',
-                                                  'image_id_list': ['3512']}},
-                               True,
-                               0,
-                               '',
-                               'delete_qualifications')]
-
-test_23_adcreatives2_delete = [
-    (100006180, 63651, 35997, True, 0, '', 'delete_adcreatives')
-]
-
-test_24_qualifications_update = [
-    (1553568843, 'INDUSTRY_QUALIFICATION', 10009283,
-     ['3517'], True, 0, '', 'delete_adcreatives')
+test_03_adcreatives2_delete = [
+    ({
+        'account_id': 'global variable',
+        'adcreative_id': 'global variable',
+        'ad_id': 'global variable'}, {
+        'result': True, 'code': 0, 'msg': ''}, 'delete_adcreatives2')
 ]

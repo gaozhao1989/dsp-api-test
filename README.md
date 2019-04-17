@@ -81,8 +81,10 @@ scoop install allure (Windows)
 可以直接启动allure服务并查看测试结果
 
 ## 注意
-目前测试用例处于代码优化状态，可能会出现运行失败或者无法正常执行的情况
-忽略接口：
-adcreative_previews
-promoted_objects
-pages(需正式服，且落地页审核通过)
+目前测试用例处于代码优化状态，可能会出现运行失败或者无法正常执行的情况<br>
+忽略接口：<br>
+tsa:
+    debug/auth
+    adcreative_previews<br>
+    promoted_objects<br>
+    pages(需正式服，且落地页审核通过)<br>
