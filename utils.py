@@ -111,13 +111,13 @@ class ConfigParser:
         self.config.read(os.path.join(os.getcwd(), 'config.ini'))
 
     def get_admin_addr(self):
-        return self.config.get('admin', 'admin_addr')
+        return self.config['admin']['admin_addr']
 
     def get_tsa_addr(self):
-        return self.config.get('tsa', 'tsa_addr')
+        return self.config['tsa']['tsa_addr']
 
     def get_wx_addr(self):
-        return self.config.get('wx', 'wx_addr')
+        return self.config['wx']['wx_addr']
 
 
 class DataGenerator:
