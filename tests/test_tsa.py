@@ -20,6 +20,7 @@ adcreative_id = None
 ad_id = None
 targeting_id = None
 external_bill_no = None
+image_id = None
 
 
 def get_account_id(glo=True, payload={'account_id': 'global variable'}):
@@ -160,6 +161,27 @@ def get_ad_id(glo=True, payload={'ad_id': 'global variable'}):
         return ad_id
     else:
         return payload['ad_id']
+
+def get_image_id(glo=True,payload={'image_id':'global variable'}):
+    if payload['image_id'] == 'global variable':
+        global image_id
+        if image_id is None:
+            add_image_payload = tsa.test_01_images_add[0][0]
+            add_image_payload['account_id'] = get_account_id(payload=add_image_payload)
+            files = add_image_payload['image']
+            del add_image_payload['image']
+            url = urllib.parse.urljoin(addr, 'images/add')
+            response = r.req(
+                'POST',
+                url,
+                data=add_image_payload,
+                files=files
+            )
+        if glo:
+            image_id = response['data']['image_id']
+        return image_id
+    else:
+        return payload['image_id']
 
 
 @pytest.mark.userfixtures('base')
@@ -303,7 +325,12 @@ class TestTsaQualifications(object):
             res,
             test_title,
             mongodb):
+        # account_id and image_id should be associated
         payload['account_id'] = get_account_id(payload=payload)
+        payload_qua_spec = payload['qualification_spec'][next(iter(payload['qualification_spec']))]
+        if 'image_id_list' in payload_qua_spec:
+            if 'global variavle' in payload_qua_spec['image_id_list']:
+                payload_qua_spec['image_id_list'][0] = get_image_id()
         url = urllib.parse.urljoin(addr, 'qualifications/add')
         response = r.req('POST', url, json=payload)
         au.assertgroup(res, response, ['code', 'msg'])
@@ -337,6 +364,9 @@ class TestTsaQualifications(object):
             test_title,
             mongodb):
         payload['account_id'] = get_account_id(payload=payload)
+        if 'image_id_list' in payload:
+            if 'global variavle' in payload['image_id_list']:
+                payload['image_id_list'][0] = get_image_id()
         payload['qualification_id'] = get_qualification_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'qualifications/update')
         response = r.req('POST', url, json=payload)

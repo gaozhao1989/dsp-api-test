@@ -77,9 +77,9 @@ test_01_qualifications_add = [
         'qualification_type': 'INDUSTRY_QUALIFICATION',
         'qualification_spec': {
             'industry_spec': {
-                'system_industry_id': 21474836586,
+                'system_industry_id': 21474836581,
                 'qualification_code': 'A150',
-                'image_id_list': ['3512']}}},
+                'image_id_list': ['global variable']}}},
      {
         'result': True,
         'code': 0,
@@ -89,7 +89,7 @@ test_01_qualifications_add = [
 test_02_qualifications_update = [({'account_id': 'global variable',
                                    'qualification_type': 'INDUSTRY_QUALIFICATION',
                                    'qualification_id': 'global variable',
-                                   'image_id_list': ['3517']},
+                                   'image_id_list': ['global variable']},
                                   {'result': True,
                                    'code': 0,
                                    'msg': ''},
