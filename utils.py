@@ -15,6 +15,7 @@ import json
 import configparser
 import random
 import datetime
+import time
 from functools import wraps
 import shutil
 import pymongo
@@ -52,15 +53,6 @@ class PathParser:
     def current_path():
         return os.getcwd()
 
-    def get_workspace_root_path(self):
-        present_work_dir = self.current_path()
-        while True:
-            if present_work_dir.endswith(self.workspace_name):
-                break
-            else:
-                present_work_dir = os.path.dirname(present_work_dir)
-        return present_work_dir
-
     @staticmethod
     def get_abs_path(path):
         return os.path.abspath(path)
@@ -92,7 +84,7 @@ class Requests:
             logging.info('request args:{}'.format(kwargs))
             response = requests.request(method, url, **kwargs)
         except requests.exceptions.RequestException as e:
-            logging.exception(e)
+            logging.exception(str(e))
             assert False, 'request fail'
         try:
             response_json = json.loads(response.content)
@@ -139,6 +131,17 @@ class DataGenerator:
         img = Image.new('RGB',(400,400),color=tuple([random.randint(0,256) for x in range(3)]))
         draw = ImageDraw.Draw(img)
         draw.text((20,20),'test image',fill=(255,255,0))
-        img.save('image.png')
-        path = PathParser()
-        return path.path_join(path.current_path(),'image.png')
+        pp = PathParser()
+        path = pp.path_join(pp.current_path(),'misc/image.png')
+        img.save(path)
+        return path
+
+class AssertUtils:
+
+    def assertgroup(self,groupa,groupb,lis2assert):
+        for item in lis2assert:
+            if groupa[item]:
+                assert groupa[item] == groupb[item],'{}: "{}" and "{}" not equal with _id {}'.format(item,groupa[item],groupb[item],groupa['_id'])
+    
+    def assertnotfound(self,key,value):
+        assert key,'{} {} not found'.format(key, value)

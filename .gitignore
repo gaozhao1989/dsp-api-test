@@ -2,3 +2,4 @@
 ./tests/temp.py
 __pycache__/
 .pytest_cache
+temp.py

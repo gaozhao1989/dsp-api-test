@@ -1,8 +1,10 @@
 import random
 
 from utils import DataGenerator
+from utils import PathParser
 
 dg = DataGenerator()
+pp = PathParser()
 
 test_01_ind_get = [({},
                     {'result': True,
@@ -396,7 +398,7 @@ test_02_images_get = [
 test_01_video_add = [
     ({
         'account_id': 'global variable',
-        'video': 'C:/Users/SNQU/Pictures/github200x200Discount.jpg'
+        'video': pp.path_join(pp.current_path(),'misc/video.webm')
     }, {
         'result': True, 'code': 0, 'msg': ''}, 'add_video')]
 

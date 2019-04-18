@@ -1,7 +1,9 @@
 import random
 from utils import DataGenerator
+from utils import PathParser
 
 dg = DataGenerator()
+pp = PathParser()
 
 test_01_advertiser_add = [({'appid': 'wxd1de6b7bf1d874f9',
                             'system_industry_id': 2102,
@@ -258,161 +260,152 @@ test_04_ads_delete = [({'appid': 'wxd1de6b7bf1d874f9', 'ad_id': 'global variable
                              'code': 0,
                              'msg': ''},
                             'delete_ad')]
+test_01_images_add = [({'appid': 'wxd1de6b7bf1d874f9', 'image': dg.drawimage()},
+                            {'result': True,
+                             'code': 0,
+                             'msg': ''},
+                            'add_image')]
 
-test_03_advertiser_get = [
-    ({'appid': 'wxd1de6b7bf1d874f9'},
-     {'result': True, 'code': 0, 'msg': ''},
-     'get_advertiser_by_appid')
-]
+test_02_images_get = [({'appid': 'wxd1de6b7bf1d874f9', 'image_id': 'global variable',
+'filtering':'','page':'','page_size':''},
+                            {'result': True,
+                             'code': 0,
+                             'msg': ''},
+                            'get_image'),
+                            ({'appid': 'wxd1de6b7bf1d874f9', 
+'filtering':'','page':'','page_size':''},
+                            {'result': True,
+                             'code': 0,
+                             'msg': ''},
+                            'get_all_image')]
 
-test_01_advertiser_get = [
-    ({'appid': 'wxd1de6b7bf1d874f9'},
-     {'result': True, 'code': 0, 'msg': ''},
-     'get_advertiser_by_appid')
-]
+test_01_custom_audiences_add = [({'appid': 'wxd1de6b7bf1d874f9', 'name': 'test_name_{}'.format(dg.randint()),
+'type':'CUSTOMER_FILE','description':'test_description_{}'.format(dg.randint())},
+                            {'result': True,
+                             'code': 0,
+                             'msg': ''},
+                            'add_custom_audiences')]
 
-test_02_ads_get = [
-    ('wxd1de6b7bf1d874f9',
-     True, 0, '', 'get_ads_by_appid')
-]
-
-test_03_sp_entrustment_add = [
-    ('wxd1de6b7bf1d874f9',
-     True, 0, '', 'create_sp_entrustment')
-]
-
-test_04_sp_entrustment_get = [
-    ('wxd1de6b7bf1d874f9',
-     True, 0, '', 'get_sp_entrustment_by_appid')
-]
-
-test_05_campaigns_add = [
-    ('wxd1de6b7bf1d874f9',
-     'test_campaign_name_{}'.format(
-         random.randint(
-             1000,
-             9999)),
-     'CAMPAIGN_TYPE_WECHAT_MOMENTS',
-     'PRODUCT_TYPE_LINK_WECHAT',
-     'AD_STATUS_SUSPEND',
-     '',
-     '',
-     True,
-     0,
-     '',
-     'create_campaign')]
-
-test_06_campaigns_get = [
-    ('wxd1de6b7bf1d874f9', 41704869, '', '', '',
-     True, 0, '', 'get_all_campaign'),
-    ('wxd1de6b7bf1d874f9', '', '', '', '',
-     True, 0, '', 'get_all_campaign')
-]
-
-test_07_campaigns_update = [
-    ('wxd1de6b7bf1d874f9', 41704869, '', '', '',
-     True, 0, '', 'update_campaign')
-]
-
-test_08_campaigns_delete = [
-    ('wxd1de6b7bf1d874f9', 41703265,
-     True, 0, '', 'delete_campaigns')
-]
-
-test_09_adgroups_add = [('wxd1de6b7bf1d874f9',
-                         41704869,
-                         'test_adgroup_name_{}'.format(random.randint(1000,
-                                                                      9999)),
-                         ["SITE_SET_WECHAT"],
-                         'PRODUCT_TYPE_LINK_WECHAT',
-                         {'age': ['15~25'],
-                          'geo_location':{'regions': [110000,
-                                                      310000],
-                                          'location_types':['LIVE_IN']}},
-                         'OPTIMIZATIONGOAL_IMPRESSION',
-                         'BILLINGEVENT_IMPRESSION',
-                         12000,
-                         '2019-03-27',
-                         '2019-04-25',
-                         ''.join([str(random.randint(0,
-                                                     1)) for x in range(48)]) * 7,
-                         500000,
-                         '',
-                         'AD_STATUS_SUSPEND',
-                         '',
-                         True,
-                         0,
-                         '',
-                         'create_adgroup')]
-
-test_10_images_add = [
-    ('wxd1de6b7bf1d874f9', 'C:/Users/SNQU/Pictures/github200x200Discount.jpg',
-     True, 0, '', 'create_image')
-]
-
-test_11_images_get = [
-    ('wxd1de6b7bf1d874f9', '', '', '',
-     True, 0, '', 'get_image')
-]
-
-test_12_adcreatives2_add = [
-    ('wxd1de6b7bf1d874f9',
-     41704869,
-     'test_adcreative_name_{}'.format(
-         random.randint(
-             1000,
-             9999)),
-     263,
-     {
-         'title': 'test_title',
-         'image_list': ['9738853:93308213c445916a2acfa81425a643be']},
-     'https://www.example.com',
-     ["SITE_SET_WECHAT"],
-     'PRODUCT_TYPE_LINK_WECHAT',
-     '',
-     '',
-     113228326,
-     'test_ad_name_{}'.format(
-         random.randint(
-             1000,
-             9999)),
-     'AD_STATUS_SUSPEND',
-     '',
-     True,
-     0,
-     '',
-     'create_adcreatives2')]
-
-test_13_funds_get = [
-    ('wxd1de6b7bf1d874f9',
-     True, 0, '', 'get_funds_by_appid')
-]
-
-
-test_14_fund_statements_detailed_get = [
-    ('wxd1de6b7bf1d874f9',
-     'TRANSACTION_RECHARGE',
-     {
-         'start_date': '2019-03-29',
-         'end_date': '2019-03-29'},
-        True,
-        0,
-        '',
-     'get_fund_statements_detailed_by_appid')]
-
-test_15_daily_reports_get = [('wxd1de6b7bf1d874f9',
-                              'MOMENTS_REPORT',
-                              'CAMPAIGN',
-                              {'start_date': '2019-03-29',
+test_02_custom_audiences_update = [({'appid': 'wxd1de6b7bf1d874f9','audience_id':'global variable', 'name': 'update_name_{}'.format(dg.randint()),
+'type':'CUSTOMER_FILE','description':'update_description_{}'.format(dg.randint())},
+                            {'result': True,
+                             'code': 0,
+                             'msg': ''},
+                            'update_custom_audiences')]       
+test_03_custom_audiences_get = [({'appid': 'wxd1de6b7bf1d874f9','audience_id':'global variable', 'page': '',
+'page_size':''},
+                            {'result': True,
+                             'code': 0,
+                             'msg': ''},
+                            'get_custom_audiences'),
+                            ({'appid': 'wxd1de6b7bf1d874f9', 'page': '',
+'page_size':''},
+                            {'result': True,
+                             'code': 0,
+                             'msg': ''},
+                            'get_all_custom_audiences')]  
+test_01_custom_audience_files_add = [({'appid': 'wxd1de6b7bf1d874f9', 'file': pp.path_join(pp.current_path(),'misc/audiencefile.zip'),'user_id_type':'QQ','operation_type':'APPEND','audience_id':'global variable'},
+                            {'result': True,
+                             'code': 0,
+                             'msg': ''},
+                            'add_custom_audience_file')]    
+test_02_custom_audience_files_get = [({'appid': 'wxd1de6b7bf1d874f9', 'custom_audience_file_id': 'global variable','audience_id':'','page':'','page_size':''},
+                            {'result': True,
+                             'code': 0,
+                             'msg': ''},
+                            'get_custom_audience_file')]                                                                                                        
+test_01_daily_reports_get = [
+    ({
+            'appid': 'wxd1de6b7bf1d874f9',
+            'report_type': 'MOMENTS_REPORT',
+            'level': 'CAMPAIGN',
+            'date_range': {'start_date': '2019-03-29',
                                'end_date': '2019-03-31'},
-                              '',
-                              '',
-                              True,
-                              0,
-                              '',
-                              'get_daily_report_by_appid')]
+            'page': '',
+            'page_size': ''},
+                            {'result': True,
+                             'code': 0,
+                             'msg': ''},
+                            'get_daily_report')
+]
 
-test_16_fund_transfer_add = [
-    ('wxd1de6b7bf1d874f9', 'GENERAL_CASH', 1, 'test_transfer', 'test_transfer',
-     True, 0, '', 'get_funds_by_appid')
+test_01_realtime_cost_get=[
+        ({
+            'appid': 'wxd1de6b7bf1d874f9',
+            'level': 'ADGROUP',
+            'date': '2019-03-25',
+            'filtering': ''},
+                            {'result': True,
+                             'code': 0,
+                             'msg': ''},
+                            'get_realtime_cost')
+]
+
+test_01_estimation_get =[
+    ({
+            'appid': 'wxd1de6b7bf1d874f9',
+            'campaign_type': 'CAMPAIGN_TYPE_WECHAT_MOMENTS',
+            'targeting': {
+            'geo_location': {
+                'location_types': ['RECENTLY_IN'],
+                'regions':[510100]
+            }
+        }},
+                            {'result': True,
+                             'code': 0,
+                             'msg': ''},
+                            'get_estimation')
+]
+
+test_01_adcreatives2_add =[
+    ({
+            'appid': 'wxd1de6b7bf1d874f9',
+            'campaign_id': 'global variable',
+            'adcreative_name': 'test_adcreative_name_{}'.format(dg.randint()),
+            'adcreative_template_id': 263,
+            'adcreative_elements': {
+                                 'title': 'test_title_{}'.format(dg.randint()),
+                                 'image_list': ['9738853:93308213c445916a2acfa81425a643be']},
+            'destination_url': 'https://www.testexample.com',
+            'site_set':['SITE_SET_WECHAT'],
+            'product_type':'PRODUCT_TYPE_LINK_WECHAT',
+            'product_refs_id': '',
+            'share_info': '',
+            'adgroup_id': 'global variable',
+            'ad_name': 'test_ad_name_{}'.format(dg.randint()),
+            'configured_status': 'AD_STATUS_SUSPEND',
+            'sndo_ader_id': ''},
+                            {'result': True,
+                             'code': 0,
+                             'msg': ''},
+                            'add_adcreatives2')
+]
+
+test_02_adcreatives2_update =[
+    ({
+            'appid': 'wxd1de6b7bf1d874f9',
+            'adcreative_id': 'global variable',
+            'adcreative_name': 'update_adcreative_name_{}'.format(dg.randint()),
+            'adcreative_elements': {
+                                 'title': 'test_title_{}'.format(dg.randint()),
+                                 'image_list': ['9738853:93308213c445916a2acfa81425a643be']},
+            'destination_url': 'https://www.updateexample.com',
+            'ad_id': 'global variable',
+            'ad_name': 'update_ad_name_{}'.format(dg.randint()),
+            'configured_status': 'AD_STATUS_SUSPEND'},
+                            {'result': True,
+                             'code': 0,
+                             'msg': ''},
+                            'update_adcreatives2')
+]
+
+test_03_adcreatives2_delete =[
+    ({
+            'appid': 'wxd1de6b7bf1d874f9',
+            'adcreative_id': 'global variable',
+            'ad_id': 'global variable'},
+                            {'result': True,
+                             'code': 0,
+                             'msg': ''},
+                            'delete_adcreatives2')
 ]

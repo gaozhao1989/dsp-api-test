@@ -3,13 +3,14 @@ import urllib.parse
 import requests
 import pytest
 from parameters import tsa
-from utils import Log, Requests, ConfigParser, DataGenerator
+from utils import Log, Requests, ConfigParser, DataGenerator, AssertUtils
 
 cp = ConfigParser()
 addr = cp.get_tsa_addr()
 log = Log.getlog('TsaTest')
 r = Requests()
 dg = DataGenerator()
+au = AssertUtils()
 # global varibales
 account_id = None
 qualification_id = None
@@ -21,7 +22,7 @@ targeting_id = None
 external_bill_no = None
 
 
-def get_account_id(glo=True, payload={'account_id':'global variable'}):
+def get_account_id(glo=True, payload={'account_id': 'global variable'}):
     if payload['account_id'] == 'global variable':
         global account_id
         if account_id is None:
@@ -37,12 +38,13 @@ def get_account_id(glo=True, payload={'account_id':'global variable'}):
         return payload['account_id']
 
 
-def get_qualification_id(glo=True, payload={'qualification_id':'global variable'}):
+def get_qualification_id(glo=True, payload={'qualification_id': 'global variable'}):
     if payload['qualification_id'] == 'global variable':
         global qualification_id
         if qualification_id is None:
             add_qua_payload = tsa.test_01_qualifications_add[0][0]
-            add_qua_payload['account_id'] = get_account_id(payload=add_qua_payload)
+            add_qua_payload['account_id'] = get_account_id(
+                payload=add_qua_payload)
             url = urllib.parse.urljoin(addr, 'qualifications/add')
             response = r.req(
                 'POST',
@@ -55,12 +57,13 @@ def get_qualification_id(glo=True, payload={'qualification_id':'global variable'
         return payload['qualification_id']
 
 
-def get_campaign_id(glo=True, payload={'campaign_id':'global variable'}):
+def get_campaign_id(glo=True, payload={'campaign_id': 'global variable'}):
     if payload['campaign_id'] == 'global variable':
         global campaign_id
         if campaign_id is None:
             add_cam_payload = tsa.test_01_campaigns_add[0][0]
-            add_cam_payload['account_id'] = get_account_id(payload=add_cam_payload)
+            add_cam_payload['account_id'] = get_account_id(
+                payload=add_cam_payload)
             url = urllib.parse.urljoin(addr, 'campaigns/add')
             response = r.req(
                 'POST',
@@ -73,12 +76,13 @@ def get_campaign_id(glo=True, payload={'campaign_id':'global variable'}):
         return payload['campaign_id']
 
 
-def get_targeting_id(glo=True, payload={'targeting_id':'global variable'}):
+def get_targeting_id(glo=True, payload={'targeting_id': 'global variable'}):
     if payload['targeting_id'] == 'globale variable':
         global targeting_id
         if targeting_id is None:
             add_targeting_payload = tsa.test_01_targeting_add[0][0]
-            add_targeting_payload['account_id'] = get_account_id(payload=add_targeting_payload)
+            add_targeting_payload['account_id'] = get_account_id(
+                payload=add_targeting_payload)
             url = urllib.parse.urljoin(addr, 'targeting/add')
             response = r.req(
                 'POST',
@@ -91,14 +95,17 @@ def get_targeting_id(glo=True, payload={'targeting_id':'global variable'}):
         return payload['targeting_id']
 
 
-def get_adgroup_id(glo=True, payload={'adgroup_id':'global variable'}):
+def get_adgroup_id(glo=True, payload={'adgroup_id': 'global variable'}):
     if payload['adgroup_id'] == 'global variable':
         global adgroup_id
         if adgroup_id is None:
             add_adgroup_payload = tsa.test_01_adgroups_add[0][0]
-            add_adgroup_payload['account_id'] = get_account_id(payload=add_adgroup_payload)
-            add_adgroup_payload['campaign_id'] = get_campaign_id(payload=add_adgroup_payload)
-            add_adgroup_payload['targeting_id'] = get_targeting_id(payload=add_adgroup_payload)
+            add_adgroup_payload['account_id'] = get_account_id(
+                payload=add_adgroup_payload)
+            add_adgroup_payload['campaign_id'] = get_campaign_id(
+                payload=add_adgroup_payload)
+            add_adgroup_payload['targeting_id'] = get_targeting_id(
+                payload=add_adgroup_payload)
             url = urllib.parse.urljoin(addr, 'adgroups/add')
             response = r.req(
                 'POST',
@@ -111,13 +118,15 @@ def get_adgroup_id(glo=True, payload={'adgroup_id':'global variable'}):
         return payload['adgroup_id']
 
 
-def get_adcreative_id(glo=True, payload={'adcreative_id':'global variable'}):
+def get_adcreative_id(glo=True, payload={'adcreative_id': 'global variable'}):
     if payload['adcreative_id'] == 'global variable':
         global adcreative_id
         if adcreative_id is None:
             add_adcreative_payload = tsa.test_01_adcreatives_add[0][0]
-            add_adcreative_payload['account_id'] = get_account_id(payload=add_adcreative_payload)
-            add_adcreative_payload['campaign_id'] = get_campaign_id(payload=add_adcreative_payload)
+            add_adcreative_payload['account_id'] = get_account_id(
+                payload=add_adcreative_payload)
+            add_adcreative_payload['campaign_id'] = get_campaign_id(
+                payload=add_adcreative_payload)
             url = urllib.parse.urljoin(addr, 'adcreatives/add')
             response = r.req(
                 'POST',
@@ -130,14 +139,17 @@ def get_adcreative_id(glo=True, payload={'adcreative_id':'global variable'}):
         return payload['adcreative_id']
 
 
-def get_ad_id(glo=True, payload={'ad_id':'global variable'}):
+def get_ad_id(glo=True, payload={'ad_id': 'global variable'}):
     if payload['ad_id'] == 'global variable':
         global ad_id
         if ad_id is None:
             add_ad_payload = tsa.test_01_ads_add[0][0]
-            add_ad_payload['account_id'] = get_account_id(payload=add_ad_payload)
-            add_ad_payload['adgroup_id'] = get_adgroup_id(payload=add_ad_payload)
-            add_ad_payload['adcreative_id'] = get_adcreative_id(payload=add_ad_payload)
+            add_ad_payload['account_id'] = get_account_id(
+                payload=add_ad_payload)
+            add_ad_payload['adgroup_id'] = get_adgroup_id(
+                payload=add_ad_payload)
+            add_ad_payload['adcreative_id'] = get_adcreative_id(
+                payload=add_ad_payload)
             url = urllib.parse.urljoin(addr, 'ads/add')
             response = r.req(
                 'POST',
@@ -165,16 +177,13 @@ class TestTsaInd(object):
             mongodb):
         url = urllib.parse.urljoin(addr, 'ind/list')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'msg'])
         if res['result']:
             for tag in response['data']:
                 cursor = mongodb.sndo['tsa.industry'].find_one(
                     {'_id': tag['_id']})
-                assert cursor, 'industry not found'
-                assert cursor['describe'] == tag['describe'], 'describe not equal'
-                assert cursor['name'] == tag['name'], 'name not equal'
-                assert cursor['pid'] == tag['pid'], 'pid not equal'
+                au.assertnotfound(cursor, tag['id'])
+                au.assertgroup(cursor, tag, ['describe', 'name', 'pid'])
 
 
 @pytest.mark.userfixtures('base')
@@ -192,8 +201,7 @@ class TestTsaQua(object):
             mongodb):
         url = urllib.parse.urljoin(addr, 'qua/list')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'msg'])
 
 
 @pytest.mark.userfixtures('base')
@@ -209,12 +217,10 @@ class TestTsaADCreativeTemplates(object):
             res,
             test_title,
             mongodb):
-        payload['account'] = get_account_id(payload=payload)
+        payload['account_id'] = get_account_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'adcreative_templates/get')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
-        assert response['data']['list'], 'adcreative templates empty'
+        au.assertgroup(res, response, ['code', 'msg'])
 
 
 @pytest.mark.userfixtures('base')
@@ -232,24 +238,14 @@ class TestTsaAdvertiser(object):
             mongodb):
         url = urllib.parse.urljoin(addr, 'advertiser/add')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'msg'])
         if res['result']:
             cursor = mongodb.sndo['tsa.account'].find_one(
                 {'account_id': response['data']['account_id']})
-            assert cursor, 'advertiser not found'
+            au.assertnotfound(cursor, response['data']['account_id'])
             global account_id
             account_id = response['data']['account_id']
-            assert cursor['corporation_name'] == payload['corporation_name'], 'corporation_name not equal'
-            assert cursor['certification_image_id'] == payload['certification_image_id'], 'certification_image_id not equal'
-            assert cursor['system_industry_id'] == payload['system_industry_id'], 'system_industry_id not equal'
-            assert cursor['introduction_url'] == payload['introduction_url'], 'introduction_url not equal'
-            assert cursor['individual_qualification'] == payload['individual_qualification'], 'individual_qualification not equal'
-            assert cursor['corporate_image_name'] == payload['corporate_image_name'], 'corporate_image_name not equal'
-            assert cursor['contact_person_telephone'] == payload['contact_person_telephone'], 'contact_person_telephone not equal'
-            assert cursor['contact_person_mobile'] == payload['contact_person_mobile'], 'contact_person_mobile not equal'
-            assert cursor['certification_number'] == payload['certification_number'], 'certification_number not equal'
-            assert cursor['sndo_ader_id'] == payload['sndo_ader_id'], 'individual_qualification not equal'
+            au.assertgroup(cursor, payload, ['corporation_name', 'certification_image_id', 'system_industry_id',  'introduction_url','corporate_image_name', 'contact_person_telephone', 'contact_person_mobile', 'certification_number', 'sndo_ader_id'])
 
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -264,25 +260,12 @@ class TestTsaAdvertiser(object):
         payload['account_id'] = get_account_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'advertiser/update')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'msg'])
         if res['result']:
             cursor = mongodb.sndo['tsa.account'].find_one(
                 {'account_id': response['data']['account_id']})
-            assert cursor, 'advertiser not found'
-            assert cursor['daily_budget'] == payload['daily_budget'], 'daily_budget not equal'
-            assert cursor['corporation_name'] == payload['corporation_name'], 'corporation_name not equal'
-            assert cursor['certification_image_id'] == payload['certification_image_id'], 'certification_image_id not equal'
-            assert cursor['system_industry_id'] == payload['system_industry_id'], 'system_industry_id not equal'
-            assert cursor['introduction_url'] == payload['introduction_url'], 'introduction_url not equal'
-            assert cursor['individual_qualification'] == payload['individual_qualification'], 'individual_qualification not equal'
-            assert cursor['corporate_image_name'] == payload['corporate_image_name'], 'corporate_image_name not equal'
-            assert cursor['contact_person_telephone'] == payload['contact_person_telephone'], 'contact_person_telephone not equal'
-            assert cursor['contact_person_mobile'] == payload['contact_person_mobile'], 'contact_person_mobile not equal'
-            assert cursor['certification_number'] == payload['certification_number'], 'certification_number not equal'
-            assert cursor['sndo_ader_id'] == payload['sndo_ader_id'], 'individual_qualification not equal'
-            assert cursor['wechat_spec'] == payload['wechat_spec'], 'wechat_spec not equal'
-            assert cursor['websites'] == payload['websites'], 'websites not equal'
+            au.assertnotfound(cursor, response['data']['account_id'])
+            au.assertgroup(cursor, payload, ['daily_budget', 'corporation_name', 'certification_image_id', 'system_industry_id', 'introduction_url','individual_qualification', 'corporate_image_name', 'contact_person_telephone', 'contact_person_mobile', 'sndo_ader_id', 'wechat_spec', 'websites'])
 
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -295,23 +278,16 @@ class TestTsaAdvertiser(object):
             test_title,
             mongodb):
         url = urllib.parse.urljoin(addr, 'advertiser/get')
-        if 'account' in payload:
+        if 'account_id' in payload:
             payload['account_id'] = get_account_id(payload=payload)
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'msg'])
         if res['result']:
             for tag in response['data']['list']:
                 cursor = mongodb.sndo['tsa.account'].find_one(
                     {'account_id': tag['account_id']})
-                assert cursor, 'advertiser not found'
-                assert cursor['daily_budget'] == tag['daily_budget'], 'daily_budget not equal'
-                assert cursor['system_status'] == tag['system_status'], 'system_status not equal'
-                assert cursor['corporation_name'] == tag['corporation_name'], 'corporation_name not equal'
-                assert cursor['certification_image_id'] == tag['certification_image_id'], 'certification_image_id not equal'
-                assert cursor['individual_qualification'] == tag['individual_qualification'], 'individual_qualification not equal'
-                assert cursor['system_industry_id'] == tag['system_industry_id'], 'system_industry_id not equal'
-                assert cursor['wechat_spec'] == tag['wechat_spec'], 'wechat_spec not equal'
+                au.assertnotfound(cursor, tag['account_id'])
+                au.assertgroup(cursor, tag, ['daily_budget', 'system_status', 'corporation_name','certification_image_id', 'individual_qualification', 'system_industry_id', 'wechat_spec'])
 
 
 @pytest.mark.userfixtures('base')
@@ -330,28 +306,25 @@ class TestTsaQualifications(object):
         payload['account_id'] = get_account_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'qualifications/add')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'msg'])
         if res['result']:
             cursor = mongodb.sndo['tsa.account.qualification'].find_one(
                 {'qualification_id': response['data']['qualification_id']})
-            assert cursor, 'qualification not found'
+            au.assertnotfound(cursor, response['data']['qualification_id'])
             global qualification_id
             qualification_id = response['data']['qualification_id']
-            assert cursor['qualification_type'] == payload['qualification_type'], 'qualification_type not equal'
-            assert cursor['system_industry_id'] == payload['qualification_spec'][
-                'industry_spec']['system_industry_id'], 'system_industry_id not equal'
-            assert cursor['business_scope_id'] == payload['qualification_spec'][
-                'industry_spec']['business_scope_id'], 'business_scope_id not equal'
-            assert cursor['qualification_code'] == payload['qualification_spec'][
-                'industry_spec']['qualification_code'], 'qualification_code not equal'
-            assert cursor['image_id_list'] == payload['qualification_spec']['industry_spec']['image_id_list'], 'qualification_code not equal'
-            assert cursor['qualification_status'] == payload['qualification_spec'][
-                'industry_spec']['qualification_status'], 'qualification_status not equal'
-            assert cursor['reject_message'] == payload['qualification_spec']['industry_spec']['reject_message'], 'reject_message not equal'
-            assert cursor['created_time'] == payload['qualification_spec']['industry_spec']['created_time'], 'created_time not equal'
-            assert cursor['last_modified_time'] == payload['qualification_spec'][
-                'industry_spec']['last_modified_time'], 'last_modified_time not equal'
+            au.assertgroup(cursor,payload,['account_id','qualification_type'])
+            if payload['qualification_type'] == 'INDUSTRY_QUALIFICATION':
+                au.assertgroup(cursor,payload['qualification_spec']['industry_spec'],['system_industry_id','business_scope_id','qualification_code','image_id_list','qualification_id','qualification_status','reject_message'])
+            elif payload['qualification_type'] == 'AD_QUALIFICATION':
+                au.assertgroup(cursor,payload['qualification_spec']['ad_spec'],['qualification_code','image_id_list','qualification_id','qualification_status','reject_message'])
+            elif payload['qualification_type'] == 'ADDITIONAL_INDUSTRY_QUALIFICATION':
+                au.assertgroup(cursor,payload['qualification_spec']['additional_industry_spec'],['system_industry_id','business_scope_id','qualification_code','image_id_list','qualification_id','qualification_status','reject_message'])
+            elif payload['qualification_type'] == 'INDUSTRY_QUALIFICATION_WECHAT':
+                au.assertgroup(cursor,payload['qualification_spec']['industry_wechat_spec'],['qualification_name','image_id','qualification_id','qualification_status','reject_message','image_url','expired_date'])
+            elif payload['qualification_type'] == 'AD_QUALIFICATION_WECHAT':
+                au.assertgroup(cursor,payload['qualification_spec']['ad_wechat_spec'],['qualification_name','image_id','qualification_id','qualification_status','reject_message','image_url','expired_date'])
+
 
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -367,26 +340,12 @@ class TestTsaQualifications(object):
         payload['qualification_id'] = get_qualification_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'qualifications/update')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'msg'])
         if res['result']:
             cursor = mongodb.sndo['tsa.account.qualification'].find_one(
                 {'qualification_id': response['data']['qualification_id']})
-            assert cursor, 'qualification not found'
-            assert cursor['qualification_type'] == payload['qualification_type'], 'qualification_type not equal'
-            assert cursor['system_industry_id'] == payload['qualification_spec'][
-                'industry_spec']['system_industry_id'], 'system_industry_id not equal'
-            assert cursor['business_scope_id'] == payload['qualification_spec'][
-                'industry_spec']['business_scope_id'], 'business_scope_id not equal'
-            assert cursor['qualification_code'] == payload['qualification_spec'][
-                'industry_spec']['qualification_code'], 'qualification_code not equal'
-            assert cursor['image_id_list'] == payload['qualification_spec']['industry_spec']['image_id_list'], 'qualification_code not equal'
-            assert cursor['qualification_status'] == payload['qualification_spec'][
-                'industry_spec']['qualification_status'], 'qualification_status not equal'
-            assert cursor['reject_message'] == payload['qualification_spec']['industry_spec']['reject_message'], 'reject_message not equal'
-            assert cursor['created_time'] == payload['qualification_spec']['industry_spec']['created_time'], 'created_time not equal'
-            assert cursor['last_modified_time'] == payload['qualification_spec'][
-                'industry_spec']['last_modified_time'], 'last_modified_time not equal'
+            au.assertnotfound(cursor, response['data']['qualification_id'])
+            au.assertgroup(cursor, payload,['qualification_type','qualification_id','image_id_list'])
 
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -401,8 +360,7 @@ class TestTsaQualifications(object):
         payload['account_id'] = get_account_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'qualifications/get')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'msg'])
 
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -418,8 +376,7 @@ class TestTsaQualifications(object):
         payload['qualification_id'] = get_qualification_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'qualifications/delete')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'msg'])
         if res['result']:
             cursor = mongodb.sndo['tsa.account.qualification'].find_one(
                 {'qualification_id': response['data']['qualification_id']})

@@ -1,4 +1,4 @@
-# [dsp-api-testing](https://github.com/gaozhao1989/dsp-api-test) api自动化测试工具
+# [dsp-api-testing](https://git.vm.snqu.com/snqu-network/sndo/automated-testing) api自动化测试工具
 
 ------
 使用[Python](https://www.python.org)组合工具[Reuqests](https://github.com/requests/requests)实现对api自动化测试。使用 Requests 作为底层框架，[Pytest](https://docs.pytest.org/en/latest/) 作为测试管理工具，[Allure](http://allure.qatools.ru) 作为报告输出工具。
@@ -23,7 +23,7 @@
 >   -runner.py<br>
 >   -utils.py<br>
 
-## [api-testing](https://github.com/gaozhao1989/dsp-api-test) 结构文件说明
+## [api-testing](https://git.vm.snqu.com/snqu-network/sndo/automated-testing) 结构文件说明
 ### parameters
 存放参数化数据文件
 * test_tsa.py
@@ -81,10 +81,18 @@ scoop install allure (Windows)
 可以直接启动allure服务并查看测试结果
 
 ## 注意
-目前测试用例处于代码优化状态，可能会出现运行失败或者无法正常执行的情况<br>
-忽略接口：<br>
+1.忽略接口：<br>
 tsa:
     debug/auth
     adcreative_previews<br>
     promoted_objects<br>
     pages(需正式服，且落地页审核通过)<br>
+目前遗漏：（未有mongo数据保存）<br>
+wx:
+    custom_audiences(有用例，但mongo无数据结构)<br>
+    
+2.返回值错误：<br>
+{'code': 10000, 'message': 'We are unable to process your request at this time. Please retry your request. If you encounter this error repeatedly, please contact our dedicated supporting team.'} 测试服常见，腾讯方面原因，无法解决<br>
+
+## TODO
+减少测试用例中断言出现次数
