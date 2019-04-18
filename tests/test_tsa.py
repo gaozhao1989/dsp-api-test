@@ -329,7 +329,7 @@ class TestTsaQualifications(object):
         payload['account_id'] = get_account_id(payload=payload)
         payload_qua_spec = payload['qualification_spec'][next(iter(payload['qualification_spec']))]
         if 'image_id_list' in payload_qua_spec:
-            if 'global variavle' in payload_qua_spec['image_id_list']:
+            if 'global variable' in payload_qua_spec['image_id_list']:
                 payload_qua_spec['image_id_list'][0] = get_image_id()
         url = urllib.parse.urljoin(addr, 'qualifications/add')
         response = r.req('POST', url, json=payload)
@@ -365,7 +365,7 @@ class TestTsaQualifications(object):
             mongodb):
         payload['account_id'] = get_account_id(payload=payload)
         if 'image_id_list' in payload:
-            if 'global variavle' in payload['image_id_list']:
+            if 'global variable' in payload['image_id_list']:
                 payload['image_id_list'][0] = get_image_id()
         payload['qualification_id'] = get_qualification_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'qualifications/update')
