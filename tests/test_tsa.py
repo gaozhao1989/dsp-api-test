@@ -171,12 +171,13 @@ def get_image_id(glo=True,payload={'image_id':'global variable'}):
             files = add_image_payload['image']
             del add_image_payload['image']
             url = urllib.parse.urljoin(addr, 'images/add')
-            response = r.req(
-                'POST',
-                url,
-                data=add_image_payload,
-                files=files
-            )
+            with open(payload['image'] if payload['image'] else '','rb') as files:
+                response = r.req(
+                    'POST',
+                    url,
+                    data=add_image_payload,
+                    files=files
+                )
         if glo:
             image_id = response['data']['image_id']
         return image_id
@@ -1109,10 +1110,9 @@ class TestTsaImages(object):
             test_title,
             mongodb):
         url = urllib.parse.urljoin(addr, 'images/add')
-        files = {'image': open(payload['image'], 'rb')
-                 if payload['image'] else ''}
         payload = {'account_id': get_account_id(payload=payload)}
-        response = r.req('POST', url, data=payload, files=files)
+        with open(payload['image'] if payload['image'] else '','rb') as files:
+            response = r.req('POST', url, data=payload, files=files)
         assert res['code'] == response['code'], 'code not equal'
         assert res['msg'] == response['message'], 'message not equal'
         if res['result']:
@@ -1165,10 +1165,9 @@ class TestTsaVideo(object):
             test_title,
             mongodb):
         url = urllib.parse.urljoin(addr, 'video/add')
-        files = {'video': open(payload['video'], 'rb')
-                 if payload['video'] else ''}
         payload = {'account_id': get_account_id(payload=payload)}
-        response = r.req('POST', url, data=payload, files=files)
+        with open(payload['video'] if payload['video'] else '','rb') as files:
+            response = r.req('POST', url, data=payload, files=files)
         assert res['code'] == response['code'], 'code not equal'
         assert res['msg'] == response['message'], 'message not equal'
         if res['result']:
