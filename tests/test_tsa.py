@@ -171,7 +171,7 @@ def get_image_id(glo=True,payload={'image_id':'global variable'}):
             files = add_image_payload['image']
             del add_image_payload['image']
             url = urllib.parse.urljoin(addr, 'images/add')
-            with open(payload['image'] if payload['image'] else '','rb') as files:
+            with open(add_image_payload['image'] if add_image_payload['image'] else '','rb') as files:
                 response = r.req(
                     'POST',
                     url,
