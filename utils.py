@@ -135,7 +135,7 @@ class DataGenerator:
         draw = ImageDraw.Draw(img)
         draw.text((20,20),'test image',fill=(255,255,0))
         pp = PathParser()
-        path = pp.path_join(pp.current_path(),'misc/image.png')
+        path = pp.path_join(pp.current_path(),'misc','image.png')
         img.save(path)
         return path
 
