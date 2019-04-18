@@ -80,7 +80,9 @@ class Requests:
     def req(self, method, url, **kwargs):
         try:
             logging.info('request url:{}'.format(url))
-            kwargs['json'] = {k: v for k,
+            # json args clean
+            if 'json' in kwargs:
+                kwargs['json'] = {k: v for k,
                               v in kwargs['json'].items() if v is not ''}
             logging.info('request args:{}'.format(kwargs))
             response = requests.request(method, url, **kwargs)
