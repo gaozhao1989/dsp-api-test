@@ -84,7 +84,7 @@ class Requests:
             if 'json' in kwargs:
                 kwargs['json'] = {k: v for k,
                               v in kwargs['json'].items() if v is not ''}
-                logging.info('request args:{}'.format(kwargs))
+            logging.info('request args:{}'.format(kwargs))
             response = requests.request(method, url, **kwargs)
         except requests.exceptions.RequestException as e:
             logging.exception(str(e))

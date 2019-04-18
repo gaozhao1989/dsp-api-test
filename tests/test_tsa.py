@@ -169,14 +169,16 @@ def get_image_id(glo=True,payload={'image_id':'global variable'}):
             add_image_payload = tsa.test_01_images_add[0][0]
             add_image_payload['account_id'] = get_account_id(payload=add_image_payload)
             url = urllib.parse.urljoin(addr, 'images/add')
-            with open(add_image_payload['image'] if add_image_payload['image'] else '','rb') as files:
-                del add_image_payload['image']
-                response = r.req(
-                    'POST',
-                    url,
-                    data=add_image_payload,
-                    files=files
-                )
+            op = open(add_image_payload['image'], 'rb') if add_image_payload['image'] else ''
+            files = {'image': op}
+            del add_image_payload['image']
+            response = r.req(
+                'POST',
+                url,
+                data=add_image_payload,
+                files=files
+            )
+            op.close()
         if glo:
             image_id = response['data']['image_id']
         return image_id
@@ -1109,10 +1111,11 @@ class TestTsaImages(object):
             test_title,
             mongodb):
         url = urllib.parse.urljoin(addr, 'images/add')
-        payload = {'account_id': get_account_id(payload=payload)}
-        with open(payload['image'] if payload['image'] else '','rb') as files:
-            del payload['image']
-            response = r.req('POST', url, data=payload, files=files)
+        op = open(payload['image'], 'rb') if payload['image'] else ''
+        files = {'image': op}
+        del payload['image']
+        response = r.req('POST', url, data=payload, files=files)
+        op.close()
         assert res['code'] == response['code'], 'code not equal'
         assert res['msg'] == response['message'], 'message not equal'
         if res['result']:
@@ -1165,10 +1168,11 @@ class TestTsaVideo(object):
             test_title,
             mongodb):
         url = urllib.parse.urljoin(addr, 'video/add')
-        payload = {'account_id': get_account_id(payload=payload)}
-        with open(payload['video'] if payload['video'] else '','rb') as files:
-            del payload['video']
-            response = r.req('POST', url, data=payload, files=files)
+        op = open(payload['video'], 'rb') if payload['video'] else ''
+        files = {'video': op}
+        del payload['video']
+        response = r.req('POST', url, data=payload, files=files)
+        op.close()
         assert res['code'] == response['code'], 'code not equal'
         assert res['msg'] == response['message'], 'message not equal'
         if res['result']:
