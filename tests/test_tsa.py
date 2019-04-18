@@ -201,7 +201,7 @@ class TestTsaInd(object):
             mongodb):
         url = urllib.parse.urljoin(addr, 'ind/list')
         response = r.req('POST', url, json=payload)
-        au.assertgroup(res, response, ['code', 'msg'])
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             for tag in response['data']:
                 cursor = mongodb.sndo['tsa.industry'].find_one(
@@ -225,7 +225,7 @@ class TestTsaQua(object):
             mongodb):
         url = urllib.parse.urljoin(addr, 'qua/list')
         response = r.req('POST', url, json=payload)
-        au.assertgroup(res, response, ['code', 'msg'])
+        au.assertgroup(res, response, ['code', 'message'])
 
 
 @pytest.mark.userfixtures('base')
@@ -244,7 +244,7 @@ class TestTsaADCreativeTemplates(object):
         payload['account_id'] = get_account_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'adcreative_templates/get')
         response = r.req('POST', url, json=payload)
-        au.assertgroup(res, response, ['code', 'msg'])
+        au.assertgroup(res, response, ['code', 'message'])
 
 
 @pytest.mark.userfixtures('base')
@@ -262,7 +262,7 @@ class TestTsaAdvertiser(object):
             mongodb):
         url = urllib.parse.urljoin(addr, 'advertiser/add')
         response = r.req('POST', url, json=payload)
-        au.assertgroup(res, response, ['code', 'msg'])
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             cursor = mongodb.sndo['tsa.account'].find_one(
                 {'account_id': response['data']['account_id']})
@@ -284,7 +284,7 @@ class TestTsaAdvertiser(object):
         payload['account_id'] = get_account_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'advertiser/update')
         response = r.req('POST', url, json=payload)
-        au.assertgroup(res, response, ['code', 'msg'])
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             cursor = mongodb.sndo['tsa.account'].find_one(
                 {'account_id': response['data']['account_id']})
@@ -305,7 +305,7 @@ class TestTsaAdvertiser(object):
         if 'account_id' in payload:
             payload['account_id'] = get_account_id(payload=payload)
         response = r.req('POST', url, json=payload)
-        au.assertgroup(res, response, ['code', 'msg'])
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             for tag in response['data']['list']:
                 cursor = mongodb.sndo['tsa.account'].find_one(
@@ -335,7 +335,7 @@ class TestTsaQualifications(object):
                 payload_qua_spec['image_id_list'][0] = get_image_id()
         url = urllib.parse.urljoin(addr, 'qualifications/add')
         response = r.req('POST', url, json=payload)
-        au.assertgroup(res, response, ['code', 'msg'])
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             cursor = mongodb.sndo['tsa.account.qualification'].find_one(
                 {'qualification_id': response['data']['qualification_id']})
@@ -372,7 +372,7 @@ class TestTsaQualifications(object):
         payload['qualification_id'] = get_qualification_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'qualifications/update')
         response = r.req('POST', url, json=payload)
-        au.assertgroup(res, response, ['code', 'msg'])
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             cursor = mongodb.sndo['tsa.account.qualification'].find_one(
                 {'qualification_id': response['data']['qualification_id']})
@@ -392,7 +392,7 @@ class TestTsaQualifications(object):
         payload['account_id'] = get_account_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'qualifications/get')
         response = r.req('POST', url, json=payload)
-        au.assertgroup(res, response, ['code', 'msg'])
+        au.assertgroup(res, response, ['code', 'message'])
 
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -408,7 +408,7 @@ class TestTsaQualifications(object):
         payload['qualification_id'] = get_qualification_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'qualifications/delete')
         response = r.req('POST', url, json=payload)
-        au.assertgroup(res, response, ['code', 'msg'])
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             cursor = mongodb.sndo['tsa.account.qualification'].find_one(
                 {'qualification_id': response['data']['qualification_id']})
