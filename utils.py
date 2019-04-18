@@ -143,7 +143,7 @@ class AssertUtils:
 
     def assertgroup(self,groupa,groupb,lis2assert):
         for item in lis2assert:
-            if groupa[item]:
+            if item in groupa:
                 assert groupa[item] == groupb[item],'{}: "{}" and "{}" not equal with _id {}'.format(item,groupa[item],groupb[item],groupa['_id'])
     
     def assertnotfound(self,key,value):

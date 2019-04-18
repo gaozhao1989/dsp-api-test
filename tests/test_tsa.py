@@ -169,7 +169,6 @@ def get_image_id(glo=True,payload={'image_id':'global variable'}):
             add_image_payload = tsa.test_01_images_add[0][0]
             add_image_payload['account_id'] = get_account_id(payload=add_image_payload)
             url = urllib.parse.urljoin(addr, 'images/add')
-            print(add_image_payload['image'])
             op = open(add_image_payload['image'], 'rb')
             files = {'image': op}
             del add_image_payload['image']
