@@ -168,10 +168,9 @@ def get_image_id(glo=True,payload={'image_id':'global variable'}):
         if image_id is None:
             add_image_payload = tsa.test_01_images_add[0][0]
             add_image_payload['account_id'] = get_account_id(payload=add_image_payload)
-            files = add_image_payload['image']
-            del add_image_payload['image']
             url = urllib.parse.urljoin(addr, 'images/add')
             with open(add_image_payload['image'] if add_image_payload['image'] else '','rb') as files:
+                del add_image_payload['image']
                 response = r.req(
                     'POST',
                     url,
@@ -1112,6 +1111,7 @@ class TestTsaImages(object):
         url = urllib.parse.urljoin(addr, 'images/add')
         payload = {'account_id': get_account_id(payload=payload)}
         with open(payload['image'] if payload['image'] else '','rb') as files:
+            del payload['image']
             response = r.req('POST', url, data=payload, files=files)
         assert res['code'] == response['code'], 'code not equal'
         assert res['msg'] == response['message'], 'message not equal'
@@ -1167,6 +1167,7 @@ class TestTsaVideo(object):
         url = urllib.parse.urljoin(addr, 'video/add')
         payload = {'account_id': get_account_id(payload=payload)}
         with open(payload['video'] if payload['video'] else '','rb') as files:
+            del payload['video']
             response = r.req('POST', url, data=payload, files=files)
         assert res['code'] == response['code'], 'code not equal'
         assert res['msg'] == response['message'], 'message not equal'
