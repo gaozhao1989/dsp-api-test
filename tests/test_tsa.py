@@ -179,8 +179,8 @@ def get_image_id(glo=True,payload={'image_id':'global variable'}):
                 files=files
             )
             op.close()
-        if glo:
-            image_id = response['data']['image_id']
+            if glo:
+                image_id = response['data']['image_id']
         return image_id
     else:
         return payload['image_id']
