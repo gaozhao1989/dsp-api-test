@@ -15,7 +15,82 @@ qualification_id = None
 transfter_order_id = None
 campaign_id = None
 adgroup_id = None
+adcreative_id = None
+ad_id = None
 
+
+def get_campaign_id(glo=True, payload={'campaign_id': 'global variable'}):
+    if payload['campaign_id'] == 'global variable':
+        global campaign_id
+        if campaign_id is None:
+            add_cam_payload = wx.test_01_campaigns_add[0][0]
+            url = urllib.parse.urljoin(addr, 'campaigns/add')
+            response = r.req(
+                'POST',
+                url,
+                json=add_cam_payload)
+            if glo:
+                campaign_id = response['data']['campaign_id']
+        return campaign_id
+    else:
+        return payload['campaign_id']
+
+
+def get_adgroup_id(glo=True, payload={'adgroup_id': 'global variable'}):
+    if payload['adgroup_id'] == 'global variable':
+        global adgroup_id
+        if adgroup_id is None:
+            add_adgroup_payload = wx.test_01_adgroups_add[0][0]
+            add_adgroup_payload['campaign_id'] = get_campaign_id(
+                payload=add_adgroup_payload)
+            url = urllib.parse.urljoin(addr, 'adgroups/add')
+            response = r.req(
+                'POST',
+                url,
+                json=add_adgroup_payload)
+            if glo:
+                adgroup_id = response['data']['adgroup_id']
+        return adgroup_id
+    else:
+        return payload['adgroup_id']
+
+
+def get_adcreative_id(glo=True, payload={'adcreative_id': 'global variable'}):
+    if payload['adcreative_id'] == 'global variable':
+        global adcreative_id
+        if adcreative_id is None:
+            add_adcreative_payload = wx.test_01_adcreatives_add[0][0]
+            add_adcreative_payload['campaign_id'] = get_campaign_id(
+                payload=add_adcreative_payload)
+            url = urllib.parse.urljoin(addr, 'adcreatives/add')
+            response = r.req(
+                'POST',
+                url,
+                json=add_adcreative_payload)
+            if glo:
+                adcreative_id = response['data']['adcreative_id']
+        return adcreative_id
+    else:
+        return payload['adcreative_id']
+
+def get_ad_id(glo=True,payload={'ad_id':'global variable'}):
+    if payload['ad_id'] == 'global variable':
+        global ad_id
+        if ad_id is None:
+            add_ad_payload = wx.test_01_ads_add[0][0]
+            add_ad_payload['adgroup_id'] = get_adgroup_id(
+                payload=add_ad_payload)
+            add_ad_payload['adcreative_id'] = get_adcreative_id(payload=add_ad_payload)
+            url = urllib.parse.urljoin(addr, 'ads/add')
+            response = r.req(
+                'POST',
+                url,
+                json=add_ad_payload)
+            if glo:
+                ad_id = response['data']['ad_id']
+        return ad_id
+    else:
+        return payload['ad_id']
 
 @pytest.mark.userfixtures('base')
 class TestWxApiAdvertiser(object):
@@ -121,15 +196,15 @@ class TestWxApiQualifications(object):
         assert res['code'] == response['code'], 'code not equal'
         assert res['msg'] == response['message'], 'message not equal'
         if res['result']:
-            for qualification in response['data']['list']:
+            for tag in response['data']['list']:
                 cursor = mongodb.sndo['wx.account.qualification'].find_one(
-                    {'qualification_id': qualification['qualification_id']})
+                    {'qualification_id': tag['qualification_id']})
                 assert cursor, 'qualification not found'
-                assert cursor['qualification_name'] == qualification['qualification_name'], 'qualification_name not equal'
-                assert cursor['qualification_type'] == qualification['qualification_type'], 'qualification_type not equal'
-                assert cursor['qualification_image'] == qualification['qualification_image'], 'qualification_image not equal'
-                assert cursor['qualification_status'] == qualification['qualification_status'], 'qualification_status not equal'
-                assert cursor['valid_date'] == qualification['valid_date'], 'valid_date not equal'
+                assert cursor['qualification_name'] == tag['qualification_name'], 'qualification_name not equal'
+                assert cursor['qualification_type'] == tag['qualification_type'], 'qualification_type not equal'
+                assert cursor['qualification_image'] == tag['qualification_image'], 'qualification_image not equal'
+                assert cursor['qualification_status'] == tag['qualification_status'], 'qualification_status not equal'
+                assert cursor['valid_date'] == tag['valid_date'], 'valid_date not equal'
 
     # Notice: qualification in STATUS_PENDING status not allowed to be deleted.
     @Log.logtestcase()
@@ -143,7 +218,7 @@ class TestWxApiQualifications(object):
             test_title,
             mongodb):
         url = urllib.parse.urljoin(addr, 'qualifications/delete')
-        payload['qualification_id'] = qualification_id if payload['qualification_id'] == 'global_var' else payload['qualification_id']
+        payload['qualification_id'] = qualification_id if payload['qualification_id'] == 'global variable' else payload['qualification_id']
         response = r.req('POST', url, json=payload)
         assert res['code'] == response['code'], 'code not equal'
         assert res['msg'] == response['message'], 'message not equal'
@@ -303,19 +378,23 @@ class TestWxApiCampaigns(object):
             test_title,
             mongodb):
         url = urllib.parse.urljoin(addr, 'campaigns/get')
-        payload['campaign_id'] = campaign_id if payload['campaign_id'] == 'global_var' else payload['campaign_id']
+        payload['campaign_id'] = campaign_id if payload['campaign_id'] == 'global variable' else payload['campaign_id']
         response = r.req('POST', url, json=payload)
         assert res['code'] == response['code'], 'code not equal'
         assert res['msg'] == response['message'], 'message not equal'
         if res['result']:
-            if payload['campaign_id']:
+            for tag in response['data']['lit']:
                 cursor = mongodb.sndo['wx.campaign'].find_one(
-                    {'appid': payload['appid'], 'campaign_id': payload['campaign_id']})
+                    {'campaign_id': tag['campaign_id']})
                 assert cursor, 'campaign not found'
-            else:
-                cursor = mongodb.sndo['wx.campaign'].find(
-                    {'appid': payload['appid']})
-                assert cursor, 'campaign not found'
+                assert cursor['campaign_name'] == tag['campaign_name'], 'campaign_name not equal'
+                assert cursor['configured_status'] == tag['configured_status'], 'configured_status not equal'
+                assert cursor['campaign_type'] == tag['campaign_type'], 'campaign_type not equal'
+                assert cursor['product_type'] == tag['product_type'], 'product_type not equal'
+                assert cursor['daily_budget'] == tag['daily_budget'], 'daily_budget not equal'
+                assert cursor['budget_reach_date'] == tag['budget_reach_date'], 'budget_reach_date not equal'
+                assert cursor['created_time'] == tag['created_time'], 'created_time not equal'
+                assert cursor['last_modified_time'] == tag['last_modified_time'], 'last_modified_time not equal'
 
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -330,7 +409,7 @@ class TestWxApiCampaigns(object):
         bf_cursor = mongodb.sndo['wx.campaign'].find_one(
             {'appid': payload['appid'], 'campaign_id': campaign_id})
         url = urllib.parse.urljoin(addr, 'campaigns/update')
-        payload['campaign_id'] = campaign_id if payload['campaign_id'] == 'global_var' else payload['campaign_id']
+        payload['campaign_id'] = campaign_id if payload['campaign_id'] == 'global variable' else payload['campaign_id']
         response = r.req('POST', url, json=payload)
         assert res['code'] == response['code'], 'code not equal'
         assert res['msg'] == response['message'], 'message not equal'
@@ -358,13 +437,14 @@ class TestWxApiCampaigns(object):
             test_title,
             mongodb):
         url = urllib.parse.urljoin(addr, 'campaigns/delete')
-        payload['campaign_id'] = campaign_id if payload['campaign_id'] == 'global_var' else payload['campaign_id']
+        payload['campaign_id'] = campaign_id if payload['campaign_id'] == 'global variable' else payload['campaign_id']
         response = r.req('POST', url, json=payload)
         assert res['code'] == response['code'], 'code not equal'
         assert res['msg'] == response['message'], 'message not equal'
         if res['result']:
             cursor = mongodb.sndo['wx.campaign'].find_one(
                 {'appid': payload['appid'], 'campaign_id': payload['campaign_id']})
+            assert cursor, 'campaign not found'
             assert cursor['is_deleted'], 'delete fail'
 
 
@@ -381,17 +461,8 @@ class TestWxApiAdgroups(object):
             res,
             test_title,
             mongodb):
-        # create new campaign
-        response = r.req(
-            'POST',
-            urllib.parse.urljoin(
-                addr,
-                'campaigns/add'),
-            json=wx.test_01_campaigns_add[0][0])
-        global campaign_id
-        campaign_id = response['data']['campaign_id']
+        payload['campaign_id'] = get_campaign_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'adgroups/add')
-        payload['campaign_id'] = campaign_id
         response = r.req('POST', url, json=payload)
         assert res['code'] == response['code'], 'code not equal'
         assert res['msg'] == response['message'], 'message not equal'
@@ -400,8 +471,331 @@ class TestWxApiAdgroups(object):
                 {'adgroup_id': response['data']['adgroup_id']})
             assert cursor, 'adgroup not found'
             global adgroup_id
-            adgroup = response['data']['adgroup_id']
+            adgroup_id = response['data']['adgroup_id']
+            assert cursor['appid'] == payload['appid'], 'appid not equal'
+            assert cursor['campaign_id'] == payload['campaign_id'], 'campaign_id not equal'
+            assert cursor['adgroup_name'] == payload['adgroup_name'], 'adgroup_name not equal'
+            assert cursor['site_set'] == payload['site_set'], 'site_set not equal'
+            assert cursor['product_type'] == payload['product_type'], 'product_type not equal'
+            assert cursor['targeting'] == payload['targeting'], 'targeting not equal'
+            assert cursor['optimization_goal'] == payload['optimization_goal'], 'optimization_goal not equal'
+            assert cursor['billing_event'] == payload['billing_event'], 'billing_event not equal'
+            assert cursor['bid_amount'] == payload['bid_amount'], 'bid_amount not equal'
+            assert cursor['begin_date'] == payload['begin_date'], 'begin_date not equal'
+            assert cursor['end_date'] == payload['end_date'], 'end_date not equal'
+            assert cursor['time_series'] == payload['time_series'], 'time_series not equal'
+            assert cursor['daily_budget'] == payload['daily_budget'], 'daily_budget not equal'
+            assert cursor['product_refs_id'] == payload['product_refs_id'], 'product_refs_id not equal'
+            assert cursor['configured_status'] == payload['configured_status'], 'configured_status not equal'
+            assert cursor['sndo_ader_id'] == payload['sndo_ader_id'], 'sndo_ader_id not equal'
 
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_02_adgroups_update)
+    def test_02_adgroups_update(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        payload['adgroup_id'] = get_adgroup_id(payload=payload)
+        url = urllib.parse.urljoin(addr, 'adgroups/update')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            cursor = mongodb.sndo['wx.adgroup'].find_one(
+                {'adgroup_id': response['data']['adgroup_id']})
+            assert cursor, 'adgroup not found'
+            assert cursor['adgroup_name'] == payload['adgroup_name'], 'adgroup_name not equal'
+            assert cursor['targeting'] == payload['targeting'], 'targeting not equal'
+            assert cursor['bid_amount'] == payload['bid_amount'], 'bid_amount not equal'
+            assert cursor['begin_date'] == payload['begin_date'], 'begin_date not equal'
+            assert cursor['end_date'] == payload['end_date'], 'end_date not equal'
+            assert cursor['time_series'] == payload['time_series'], 'time_series not equal'
+            assert cursor['daily_budget'] == payload['daily_budget'], 'daily_budget not equal'
+            assert cursor['configured_status'] == payload['configured_status'], 'configured_status not equal'
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_03_adgroups_get)
+    def test_03_adgroups_get(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        if 'adgroup_id' in payload:
+            payload['adgroup_id'] = get_adgroup_id(payload=payload)
+        url = urllib.parse.urljoin(addr, 'adgroups/get')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            for tag in response['data']['list']:
+                cursor = mongodb.sndo['wx.adgroup'].find_one(
+                    {'adgroup_id': tag['adgroup_id']})
+                assert cursor, 'adgroup not found'
+                assert cursor['campaign_id'] == payload['campaign_id'], 'campaign_id not equal'
+                assert cursor['adgroup_name'] == payload['adgroup_name'], 'adgroup_name not equal'
+                assert cursor['site_set'] == payload['site_set'], 'site_set not equal'
+                assert cursor['product_type'] == payload['product_type'], 'product_type not equal'
+                assert cursor['targeting'] == payload['targeting'], 'targeting not equal'
+                assert cursor['optimization_goal'] == payload['optimization_goal'], 'optimization_goal not equal'
+                assert cursor['billing_event'] == payload['billing_event'], 'billing_event not equal'
+                assert cursor['bid_amount'] == payload['bid_amount'], 'bid_amount not equal'
+                assert cursor['begin_date'] == payload['begin_date'], 'begin_date not equal'
+                assert cursor['end_date'] == payload['end_date'], 'end_date not equal'
+                assert cursor['time_series'] == payload['time_series'], 'time_series not equal'
+                assert cursor['daily_budget'] == payload['daily_budget'], 'daily_budget not equal'
+                assert cursor['product_refs_id'] == payload['product_refs_id'], 'product_refs_id not equal'
+                assert cursor['configured_status'] == payload['configured_status'], 'configured_status not equal'
+                assert cursor['system_status'] == payload['system_status'], 'system_status not equal'
+                assert cursor['reject_message'] == payload['reject_message'], 'reject_message not equal'
+                assert cursor['created_time'] == payload['created_time'], 'created_time not equal'
+                assert cursor['last_modified_time'] == payload['last_modified_time'], 'last_modified_time not equal'
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_04_adgroups_delete)
+    def test_04_adgroups_delete(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        payload['adgroup_id'] = get_adgroup_id(payload=payload)
+        url = urllib.parse.urljoin(addr, 'adgroups/delete')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            cursor = mongodb.sndo['wx.adgroup'].find_one(
+                {'adgroup_id': payload['adgroup_id']})
+            assert cursor, 'adgroup not found'
+            assert cursor['is_deleted'], 'delete fail'
+
+
+@pytest.mark.usefixtures('base')
+class TestWxApiAdcreatives(object):
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_01_adcreatives_add)
+    def test_01_adcreatives_add(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        payload['campaign_id'] = get_campaign_id(payload=payload)
+        url = urllib.parse.urljoin(addr, 'adcreatives/add')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            cursor = mongodb.sndo['wx.adcreative'].find_one(
+                {'adcreative_id': response['data']['adcreative_id']})
+            assert cursor, 'adcreative not found'
+            global adcreative_id
+            adcreative_id = response['data']['adcreative_id']
+            assert cursor['appid'] == payload['appid'], 'appid not equal'
+            assert cursor['campaign_id'] == payload['campaign_id'], 'campaign_id not equal'
+            assert cursor['adcreative_name'] == payload['adcreative_name'], 'adcreative_name not equal'
+            assert cursor['adcreative_template_id'] == payload['adcreative_template_id'], 'adcreative_template_id not equal'
+            assert cursor['adcreative_elements'] == payload['adcreative_elements'], 'adcreative_elements not equal'
+            assert cursor['destination_url'] == payload['destination_url'], 'destination_url not equal'
+            assert cursor['site_set'] == payload['site_set'], 'site_set not equal'
+            assert cursor['product_type'] == payload['product_type'], 'product_type not equal'
+            assert cursor['product_refs_id'] == payload['product_refs_id'], 'product_refs_id not equal'
+            assert cursor['share_info'] == payload['share_info'], 'share_info not equal'
+            assert cursor['sndo_ader_id'] == payload['sndo_ader_id'], 'sndo_ader_id not equal'
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_02_adcreatives_update)
+    def test_02_adcreatives_update(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        payload['adcreative_id'] = get_adcreative_id(payload=payload)
+        url = urllib.parse.urljoin(addr, 'adcreatives/update')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            cursor = mongodb.sndo['wx.adcreative'].find_one(
+                {'adcreative_id': response['data']['adcreative_id']})
+            assert cursor, 'adcreative not found'
+            assert cursor['adcreative_name'] == payload['adcreative_name'], 'adcreative_name not equal'
+            assert cursor['adcreative_elements'] == payload['adcreative_elements'], 'adcreative_elements not equal'
+            assert cursor['destination_url'] == payload['destination_url'], 'destination_url not equal'
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_03_adcreatives_get)
+    def test_03_adcreatives_get(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        if 'adcreative_id' in payload:
+            payload['adcreative_id'] = get_adcreative_id(payload=payload)
+        url = urllib.parse.urljoin(addr, 'adcreatives/get')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            for tag in response['data']['list']:
+                cursor = mongodb.sndo['wx.adcreative'].find_one(
+                    {'adcreative_id': tag['adcreative_id']})
+                assert cursor, 'adcreative not found'
+                assert cursor['campaign_id'] == tag['campaign_id'],'campaign_id not equal'
+                assert cursor['adcreative_name'] == tag['adcreative_name'],'adcreative_name not equal'
+                assert cursor['adcreative_template_id'] == tag['adcreative_template_id'],'adcreative_template_id not equal'
+                assert cursor['adcreative_elements'] == tag['adcreative_elements'],'adcreative_elements not equal'
+                assert cursor['destination_url'] == tag['destination_url'],'destination_url not equal'
+                assert cursor['site_set'] == tag['site_set'],'site_set not equal'
+                assert cursor['product_type'] == tag['product_type'],'product_type not equal'
+                assert cursor['product_refs_id'] == tag['product_refs_id'],'product_refs_id not equal'
+                assert cursor['created_time'] == tag['created_time'],'created_time not equal'
+                assert cursor['last_modified_time'] == tag['last_modified_time'],'last_modified_time not equal'
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_04_adcreatives_delete)
+    def test_04_adcreatives_delete(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        payload['adcreative_id'] = get_adcreative_id(payload=payload)
+        url = urllib.parse.urljoin(addr, 'adcreatives/delete')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            cursor = mongodb.sndo['wx.adcreative'].find_one(
+                {'adcreative_id': response['data']['adcreative_id']})
+            assert cursor, 'adcreative not found'
+            assert cursor['is_deleted'], 'delete fail'
+
+@pytest.mark.usefixtures('base')
+class TestWxApiAds(object):
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_01_ads_add)
+    def test_01_ads_add(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        payload['adgroup_id'] = get_adgroup_id(payload=payload)
+        payload['adcreative_id'] = get_adcreative_id(payload=payload)
+        url = urllib.parse.urljoin(addr, 'ads/add')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            cursor = mongodb.sndo['wx.ad'].find_one(
+                {'ad_id': response['data']['ad_id']})
+            assert cursor, 'ad not found'
+            global ad_id
+            ad_id = response['data']['ad_id']
+            assert cursor['appid'] == payload['appid'], 'appid not equal'
+            assert cursor['adgroup_id'] == payload['adgroup_id'], 'adgroup_id not equal'
+            assert cursor['adcreative_id'] == payload['adcreative_id'], 'adcreative_id not equal'
+            assert cursor['ad_name'] == payload['ad_name'], 'ad_name not equal'
+            assert cursor['configured_status'] == payload['configured_status'], 'configured_status not equal'
+            assert cursor['sndo_ader_id'] == payload['sndo_ader_id'], 'sndo_ader_id not equal'
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_02_ads_update)
+    def test_02_ads_update(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        payload['ad_id'] = get_ad_id(payload=payload)
+        url = urllib.parse.urljoin(addr, 'ads/update')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            cursor = mongodb.sndo['wx.ad'].find_one(
+                {'ad_id': response['data']['ad_id']})
+            assert cursor, 'ad not found'
+            assert cursor['ad_name'] == payload['ad_name'], 'ad_name not equal'
+            assert cursor['configured_status'] == payload['configured_status'], 'configured_status not equal'
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_03_ads_get)
+    def test_03_ads_get(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        if 'ad_id' in payload:
+            payload['ad_id'] = get_ad_id(payload=payload)
+        url = urllib.parse.urljoin(addr, 'ads/get')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            for tag in response['data']['list']:
+                cursor = mongodb.sndo['wx.ad'].find_one(
+                    {'ad_id': tag['ad_id']})
+                assert cursor, 'ad not found'
+                assert cursor['campaign_id'] == tag['campaign_id'],'campaign_id not equal'
+                assert cursor['adgroup_id'] == tag['adgroup_id'],'adgroup_id not equal'
+                assert cursor['ad_name'] == tag['ad_name'],'ad_name not equal'
+                assert cursor['adcreative'] == tag['adcreative'],'adcreative not equal'
+                assert cursor['configured_status'] == tag['configured_status'],'configured_status not equal'
+                assert cursor['system_status'] == tag['system_status'],'system_status not equal'
+                assert cursor['reject_message'] == tag['reject_message'],'reject_message not equal'
+                assert cursor['created_time'] == tag['created_time'],'created_time not equal'
+                assert cursor['last_modified_time'] == tag['last_modified_time'],'last_modified_time not equal'
+
+    @Log.logtestcase()
+    @pytest.mark.parametrize(
+        'payload, res, test_title',
+        wx.test_04_ads_delete)
+    def test_04_ads_delete(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):
+        payload['ad_id'] = get_ad_id(payload=payload)
+        url = urllib.parse.urljoin(addr, 'ads/delete')
+        response = r.req('POST', url, json=payload)
+        assert res['code'] == response['code'], 'code not equal'
+        assert res['msg'] == response['message'], 'message not equal'
+        if res['result']:
+            cursor = mongodb.sndo['wx.ad'].find_one(
+                {'ad_id': response['data']['ad_id']})
+            assert cursor, 'ad not found'
+            assert cursor['is_deleted'], 'delete fail'
 
 @pytest.mark.usefixtures('base')
 class TestWxApi(object):
