@@ -431,24 +431,14 @@ class TestTsaCampaigns(object):
         payload['account_id'] = get_account_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'campaigns/add')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             cursor = mongodb.sndo['tsa.campaign'].find_one(
                 {'campaign_id': response['data']['campaign_id']})
-            assert cursor, 'campaign not found'
+            au.assertnotfound(cursor,response['data']['campaign_id'])
             global campaign_id
             campaign_id = response['data']['campaign_id']
-            assert cursor['account_id'] == payload['account_id'], 'account_id not equal'
-            assert cursor['campaign_name'] == payload['campaign_name'], 'campaign_name not equal'
-            assert cursor['campaign_type'] == payload['campaign_type'], 'campaign_type not equal'
-            assert cursor['promoted_object_type'] == payload['promoted_object_type'], 'promoted_object_type not equal'
-            assert cursor['daily_budget'] == payload['daily_budget'], 'daily_budget not equal'
-            assert cursor['configured_status'] == payload['configured_status'] if payload[
-                'configured_status'] else 'AD_STATUS_NORMAL', 'configured_status not equal'
-            assert cursor['speed_mode'] == payload['speed_mode'] if payload['speed_mode'] else 'SPEED_MODE_STANDARD', 'speed_mode not equal'
-            assert cursor['sndo_ader_id'] == payload['sndo_ader_id'], 'sndo_ader_id not equal'
-            assert cursor['is_deleted'] == False, 'is_deleted not equal'
+            au.assertgroup(cursor,payload,['account_id','campaign_name','campaign_type','promoted_object_type','daily_budget','configured_status','speed_mode','sndo_ader_id'])    
 
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -464,19 +454,12 @@ class TestTsaCampaigns(object):
         payload['campaign_id'] = get_campaign_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'campaigns/update')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             cursor = mongodb.sndo['tsa.campaign'].find_one(
                 {'campaign_id': response['data']['campaign_id']})
-            assert cursor, 'campaign not found'
-            assert cursor['account_id'] == payload['account_id'], 'account_id not equal'
-            assert cursor['campaign_name'] == payload['campaign_name'], 'campaign_name not equal'
-            assert cursor['daily_budget'] == payload['daily_budget'], 'daily_budget not equal'
-            assert cursor['configured_status'] == payload['configured_status'] if payload[
-                'configured_status'] else 'AD_STATUS_NORMAL', 'configured_status not equal'
-            assert cursor['speed_mode'] == payload['speed_mode'] if payload['speed_mode'] else 'SPEED_MODE_STANDARD', 'speed_mode not equal'
-            assert cursor['promoted_object_type'] == payload['promoted_object_type'], 'promoted_object_type not equal'
+            au.assertnotfound(cursor,response['data']['campaign_id'])
+            au.assertgroup(cursor,payload,['account_id','campaign_name','daily_budget','configured_status','speed_mode','promoted_object_type'])    
 
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -491,24 +474,13 @@ class TestTsaCampaigns(object):
         payload['account_id'] = get_account_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'campaigns/get')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             for tag in response['data']['list']:
                 cursor = mongodb.sndo['tsa.campaign'].find_one(
                     {'campaign_id': tag['campaign_id']})
-                assert cursor, 'campaign not found'
-                assert cursor['campaign_name'] == tag['campaign_name'], 'campaign_name not equal'
-                assert cursor['configured_status'] == tag['configured_status'], 'configured_status not equal'
-                assert cursor['campaign_type'] == tag['campaign_type'], 'campaign_type not equal'
-                assert cursor['promoted_object_type'] == tag['promoted_object_type'], 'promoted_object_type not equal'
-                assert cursor['daily_budget'] == tag['daily_budget'], 'daily_budget not equal'
-                assert cursor['budget_reach_date'] == tag['budget_reach_date'], 'budget_reach_date not equal'
-                assert cursor['created_time'] == tag['created_time'], 'created_time not equal'
-                assert cursor['last_modified_time'] == tag['last_modified_time'], 'last_modified_time not equal'
-                assert cursor['speed_mode'] == tag['speed_mode'], 'speed_mode not equal'
-                assert cursor['is_deleted'] == tag['is_deleted'], 'is_deleted not equal'
-                assert cursor['account_id'] == payload['account_id'], 'account_id not equal'
+                au.assertnotfound(cursor,tag['campaign_id'])
+                au.assertgroup(cursor, tag, ['campaign_name','configured_status','campaign_type','promoted_object_type','daily_budget','budget_reach_date','created_time','last_modified_time','speed_mode','is_deleted','account_id'])
 
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -524,8 +496,7 @@ class TestTsaCampaigns(object):
         payload['campaign_id'] = get_campaign_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'campaigns/delete')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             cursor = mongodb.sndo['tsa.campaign'].find_one(
                 {'campaign_id': payload['campaign_id']})
