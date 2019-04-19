@@ -428,6 +428,7 @@ class TestTsaCampaigns(object):
             res,
             test_title,
             mongodb):
+        # account inactive can not add campaign
         payload['account_id'] = get_account_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'campaigns/add')
         response = r.req('POST', url, json=payload)
@@ -521,25 +522,14 @@ class TestTsaAdgroups(object):
         payload['targeting_id'] = get_targeting_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'adgroups/add')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             cursor = mongodb.sndo['tsa.adgroup'].find_one(
                 {'adgroup_id': response['data']['adgroup_id']})
-            assert cursor, 'adgroup not found'
+            au.assertnotfound(cursor,response['data']['adgroup_id'])
             global adgroup_id
             adgroup_id = response['data']['adgroup_id']
-            assert cursor['account_id'] == payload['account_id'], 'account_id not equal'
-            assert cursor['campaign_id'] == payload['campaign_id'], 'campaign_id not equal'
-            assert cursor['adgroup_name'] == payload['adgroup_name'], 'adgroup_name not equal'
-            assert cursor['site_set'] == payload['site_set'], 'site_set not equal'
-            assert cursor['promoted_object_type'] == payload['promoted_object_type'], 'promoted_object_type not equal'
-            assert cursor['begin_date'] == payload['begin_date'], 'begin_date not equal'
-            assert cursor['end_date'] == payload['end_date'], 'end_date not equal'
-            assert cursor['billing_event'] == payload['billing_event'], 'billing_event not equal'
-            assert cursor['bid_amount'] == payload['bid_amount'], 'bid_amount not equal'
-            assert cursor['optimization_goal'] == payload['optimization_goal'], 'optimization_goal not equal'
-            assert cursor['targeting_id'] == payload['targeting_id'], 'targeting_id not equal'
+            au.assertgroup(cursor,payload,['account_id','campaign_id','adgroup_name','site_set','promoted_object_type','begin_date','end_date','billing_event','bid_amount','optimization_goal','targeting_id'])
 
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -556,23 +546,12 @@ class TestTsaAdgroups(object):
         payload['targeting_id'] = get_targeting_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'adgroups/update')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             cursor = mongodb.sndo['tsa.adgroup'].find_one(
                 {'adgroup_id': response['data']['adgroup_id']})
-            assert cursor, 'adgroup not found'
-            assert cursor['account_id'] == payload['account_id'], 'account_id not equal'
-            assert cursor['campaign_id'] == payload['campaign_id'], 'campaign_id not equal'
-            assert cursor['adgroup_name'] == payload['adgroup_name'], 'adgroup_name not equal'
-            assert cursor['site_set'] == payload['site_set'], 'site_set not equal'
-            assert cursor['promoted_object_type'] == payload['promoted_object_type'], 'promoted_object_type not equal'
-            assert cursor['begin_date'] == payload['begin_date'], 'begin_date not equal'
-            assert cursor['end_date'] == payload['end_date'], 'end_date not equal'
-            assert cursor['billing_event'] == payload['billing_event'], 'billing_event not equal'
-            assert cursor['bid_amount'] == payload['bid_amount'], 'bid_amount not equal'
-            assert cursor['optimization_goal'] == payload['optimization_goal'], 'optimization_goal not equal'
-            assert cursor['targeting_id'] == payload['targeting_id'], 'targeting_id not equal'
+            au.assertnotfound(cursor,response['data']['adgroup_id'])
+            au.assertgroup(cursor,payload,['account_id','campaign_id','adgroup_name','site_set','promoted_object_type','begin_date','end_date','billing_event','bid_amount','optimization_goal','targeting_id'])
 
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -587,44 +566,14 @@ class TestTsaAdgroups(object):
         payload['account_id'] = get_account_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'adgroups/get')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             for tag in response['data']['list']:
                 cursor = mongodb.sndo['tsa.adgroup'].find_one(
                     {'adgroup_id': tag['adgroup_id']})
-                assert cursor, 'adgroup not found'
-                assert cursor['account_id'] == tag['account_id'], 'account_id not equal'
-                assert cursor['campaign_id'] == tag['campaign_id'], 'campaign_id not equal'
-                assert cursor['adgroup_name'] == tag['adgroup_name'], 'adgroup_name not equal'
-                assert cursor['site_set'] == tag['site_set'], 'site_set not equal'
-                assert cursor['promoted_object_type'] == tag['promoted_object_type'], 'promoted_object_type not equal'
-                assert cursor['begin_date'] == tag['begin_date'], 'begin_date not equal'
-                assert cursor['end_date'] == tag['end_date'], 'end_date not equal'
-                assert cursor['billing_event'] == tag['billing_event'], 'billing_event not equal'
-                assert cursor['bid_amount'] == tag['bid_amount'], 'bid_amount not equal'
-                assert cursor['optimization_goal'] == tag['optimization_goal'], 'optimization_goal not equal'
-                assert cursor['time_series'] == tag['time_series'], 'time_series not equal'
-                assert cursor['daily_budget'] == tag['daily_budget'], 'daily_budget not equal'
-                assert cursor['promoted_object_id'] == tag['promoted_object_id'], 'promoted_object_id not equal'
-                assert cursor['app_android_channel_package_id'] == tag[
-                    'app_android_channel_package_id'], 'app_android_channel_package_id not equal'
-                assert cursor['targeting_id'] == tag['targeting_id'], 'targeting_id not equal'
-                assert cursor['targeting'] == tag['targeting'], 'targeting not equal'
-                assert cursor['scene_spec'] == tag['scene_spec'], 'scene_spec not equal'
-                assert cursor['configured_status'] == tag['configured_status'], 'configured_status not equal'
-                assert cursor['customized_category'] == tag['customized_category'], 'customized_category not equal'
-                assert cursor['frequency_capping'] == tag['frequency_capping'], 'frequency_capping not equal'
-                assert cursor['dynamic_ad_spec'] == tag['dynamic_ad_spec'], 'dynamic_ad_spec not equal'
-                assert cursor['ocpa_expand_enabled'] == tag['ocpa_expand_enabled'], 'ocpa_expand_enabled not equal'
-                assert cursor['ocpa_expand_targeting'] == tag['ocpa_expand_targeting'], 'ocpa_expand_targeting not equal'
-                assert cursor['user_action_sets'] == tag['user_action_sets'], 'user_action_sets not equal'
-                assert cursor['created_time'] == tag['created_time'], 'created_time not equal'
-                assert cursor['last_modified_time'] == tag['last_modified_time'], 'last_modified_time not equal'
-                assert cursor['is_deleted'] == tag['is_deleted'], 'is_deleted not equal'
-                assert cursor['cpc_expand_enabled'] == tag['cpc_expand_enabled'], 'cpc_expand_enabled not equal'
+                au.assertnotfound(cursor,tag['adgroup_id'])
                 assert cursor['cpc_expand_targeting'] == tag['cpc_expand_targeting'], 'cpc_expand_targeting not equal'
-                assert cursor['account_id'] == tag['account_id'], 'account_id not equal'
+                au.assertgroup(cursor,tag,['account_id','campaign_id','adgroup_name','site_set','promoted_object_type','begin_date','end_date','billing_event','bid_amount','optimization_goal','time_series','daily_budget','promoted_object_id','app_android_channel_package_id','targeting_id','targeting','scene_spec','configured_status','customized_category','frequency_capping','dynamic_ad_spec','ocpa_expand_enabled','ocpa_expand_targeting','user_action_sets','created_time','last_modified_time','is_deleted','cpc_expand_enabled',''])
 
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -640,8 +589,7 @@ class TestTsaAdgroups(object):
         payload['adgroup_id'] = get_adgroup_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'adgroups/delete')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             cursor = mongodb.sndo['tsa.adgroup'].find_one(
                 {'adgroup_id': payload['adgroup_id']})
@@ -666,22 +614,14 @@ class TestTsaAds(object):
         payload['adcreative_id'] = get_adcreative_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'ads/add')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             cursor = mongodb.sndo['tsa.ad'].find_one(
                 {'ad_id': response['data']['ad_id']})
-            assert cursor, 'ad not found'
+            au.assertnotfound(cursor,response['data']['ad_id'])
             global ad_id
             ad_id = response['data']['ad_id']
-            assert cursor['campaign_id'] == payload['campaign_id'], 'campaign_id not equal'
-            assert cursor['adgroup_id'] == payload['adgroup_id'], 'adgroup_id not equal'
-            assert cursor['ad_name'] == payload['ad_name'], 'ad_name not equal'
-            assert cursor['configured_status'] == payload['configured_status'], 'configured_status not equal'
-            assert cursor['impression_tracking_url'] == payload['impression_tracking_url'], 'impression_tracking_url not equal'
-            assert cursor['click_tracking_url'] == payload['click_tracking_url'], 'click_tracking_url not equal'
-            assert cursor['feeds_interaction_enabled'] == payload['feeds_interaction_enabled'], 'feeds_interaction_enabled not equal'
-            assert cursor['sndo_ader_id'] == payload['sndo_ader_id'], 'sndo_ader_id not equal'
+            au.assertgroup(cursor,payload,['campaign_id','adgroup_id','ad_name','configured_status','impression_tracking_url','click_tracking_url','feeds_interaction_enabled','sndo_ader_id'])
 
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -697,17 +637,12 @@ class TestTsaAds(object):
         payload['ad_id'] = get_ad_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'ads/update')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             cursor = mongodb.sndo['tsa.ad'].find_one(
-                {'ad_id': payload['ad_id']})
-            assert cursor, 'ad not found'
-            assert cursor['ad_name'] == payload['ad_name'], 'ad_name not equal'
-            assert cursor['configured_status'] == payload['configured_status'], 'configured_status not equal'
-            assert cursor['impression_tracking_url'] == payload['impression_tracking_url'], 'impression_tracking_url not equal'
-            assert cursor['click_tracking_url'] == payload['click_tracking_url'], 'click_tracking_url not equal'
-            assert cursor['feeds_interaction_enabled'] == payload['feeds_interaction_enabled'], 'feeds_interaction_enabled not equal'
+                {'ad_id': response['data']['ad_id']})
+            au.assertnotfound(cursor,response['data']['ad_id'])
+            au.assertgroup(cursor,payload,['ad_name','configured_status','impression_tracking_url','click_tracking_url','feeds_interaction_enabled'])
 
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -722,26 +657,12 @@ class TestTsaAds(object):
         payload['account_id'] = get_account_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'ads/get')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             for tag in response['data']['list']:
                 cursor = mongodb.sndo['tsa.ad'].find_one(
                     {'ad_id': tag['ad_id']})
-                assert cursor['campaign_id'] == tag['campaign_id'], 'campaign_id not equal'
-                assert cursor['adgroup_id'] == tag['adgroup_id'], 'adgroup_id not equal'
-                assert cursor['ad_name'] == tag['ad_name'], 'ad_name not equal'
-                assert cursor['adcreative'] == tag['adcreative'], 'adcreative not equal'
-                assert cursor['configured_status'] == tag['configured_status'], 'configured_status not equal'
-                assert cursor['system_status'] == tag['system_status'], 'system_status not equal'
-                assert cursor['impression_tracking_url'] == tag['impression_tracking_url'], 'impression_tracking_url not equal'
-                assert cursor['click_tracking_url'] == tag['click_tracking_url'], 'click_tracking_url not equal'
-                assert cursor['feeds_interaction_enabled'] == tag['feeds_interaction_enabled'], 'feeds_interaction_enabled not equal'
-                assert cursor['reject_message'] == tag['reject_message'], 'reject_message not equal'
-                assert cursor['conversion_tracking_enabled'] == tag['conversion_tracking_enabled'], 'conversion_tracking_enabled not equal'
-                assert cursor['is_deleted'] == tag['is_deleted'], 'is_deleted not equal'
-                assert cursor['created_time'] == tag['created_time'], 'created_time not equal'
-                assert cursor['last_modified_time'] == tag['last_modified_time'], 'last_modified_time not equal'
+                au.assertgroup(cursor,tag,['campaign_id','adgroup_id','ad_name','adcreative','configured_status','system_status','impression_tracking_url','click_tracking_url','feeds_interaction_enabled','reject_message','conversion_tracking_enabled','is_deleted','created_time','last_modified_time'])
 
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -757,12 +678,11 @@ class TestTsaAds(object):
         payload['ad_id'] = get_ad_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'ads/delete')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             cursor = mongodb.sndo['tsa.adgroup'].find_one(
                 {'adgroup_id': response['data']['ad_id']})
-            assert cursor, 'ad not found'
+            au.assertnotfound(cursor,response['data']['ad_id'])
             assert cursor['is_deleted'], 'delete fail'
 
 
@@ -783,28 +703,14 @@ class TestTsaAdcreatives(object):
         payload['campaign_id'] = get_campaign_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'adcreatives/add')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             cursor = mongodb.sndo['tsa.adcreative'].find_one(
                 {'adcreative_id': response['data']['adcreative_id']})
-            assert cursor, 'adcreative not found'
+            au.assertnotfound(cursor,response['data']['adcreative_id'])
             global adcreative_id
             adcreative_id = response['data']['adcreative_id']
-            assert cursor['adcreative_name'] == payload['adcreative_name'], 'adcreative_name not equal'
-            assert cursor['adcreative_template_id'] == payload['adcreative_template_id'], 'adcreative_template_id not equal'
-            assert cursor['adcreative_elements'] == payload['adcreative_elements'], 'adcreative_elements not equal'
-            assert cursor['site_set'] == payload['site_set'], 'site_set not equal'
-            assert cursor['promoted_object_type'] == payload['promoted_object_type'], 'promoted_object_type not equal'
-            assert cursor['page_type'] == payload['page_type'], 'page_type not equal'
-            assert cursor['page_spec'] == payload['page_spec'], 'page_spec not equal'
-            assert cursor['deep_link_url'] == payload['deep_link_url'], 'deep_link_url not equal'
-            assert cursor['promoted_object_id'] == payload['promoted_object_id'], 'promoted_object_id not equal'
-            assert cursor['share_content_spec'] == payload['share_content_spec'], 'share_content_spec not equal'
-            assert cursor['dynamic_adcreative_spec'] == payload['dynamic_adcreative_spec'], 'dynamic_adcreative_spec not equal'
-            assert cursor['multi_share_optimization_enabled'] == payload[
-                'multi_share_optimization_enabled'], 'multi_share_optimization_enabled not equal'
-            assert cursor['sndo_ader_id'] == payload['sndo_ader_id'], 'sndo_ader_id not equal'
+            au.assertgroup(cursor,payload,['adcreative_name','adcreative_template_id','adcreative_elements','site_set','promoted_object_type','page_type','page_spec','deep_link_url','promoted_object_id','share_content_spec','dynamic_adcreative_spec','multi_share_optimization_enabled','sndo_ader_id'])
 
     @Log.logtestcase()
     @pytest.mark.parametrize(
@@ -820,21 +726,12 @@ class TestTsaAdcreatives(object):
         payload['adcreative_id'] = get_adcreative_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'adcreatives/update')
         response = r.req('POST', url, json=payload)
-        assert res['code'] == response['code'], 'code not equal'
-        assert res['msg'] == response['message'], 'message not equal'
+        au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             cursor = mongodb.sndo['tsa.adcreative'].find_one(
                 {'adcreative_id': payload['adcreative_id']})
-            assert cursor, 'adcreative not found'
-            assert cursor['adcreative_name'] == payload['adcreative_name'], 'adcreative_name not equal'
-            assert cursor['adcreative_elements'] == payload['adcreative_elements'], 'adcreative_elements not equal'
-            assert cursor['page_type'] == payload['page_type'], 'page_type not equal'
-            assert cursor['page_spec'] == payload['page_spec'], 'page_spec not equal'
-            assert cursor['deep_link_url'] == payload['deep_link_url'], 'deep_link_url not equal'
-            assert cursor['share_content_spec'] == payload['share_content_spec'], 'share_content_spec not equal'
-            assert cursor['dynamic_adcreative_spec'] == payload['dynamic_adcreative_spec'], 'dynamic_adcreative_spec not equal'
-            assert cursor['multi_share_optimization_enabled'] == payload[
-                'multi_share_optimization_enabled'], 'multi_share_optimization_enabled not equal'
+            au.assertnotfound(cursor,payload['adcreative_id'])
+            au.assertgroup(cursor,payload,['adcreative_name','adcreative_elements','page_type','page_spec','deep_link_url','share_content_spec','dynamic_adcreative_spec','multi_share_optimization_enabled'])
 
     @Log.logtestcase()
     @pytest.mark.parametrize(

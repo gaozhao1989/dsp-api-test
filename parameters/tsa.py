@@ -73,7 +73,7 @@ test_03_advertiser_get = [
 
 test_01_qualifications_add = [
     ({
-        'account_id': 'global variable',
+        'account_id': 100006180,
         'qualification_type': 'INDUSTRY_QUALIFICATION',
         'qualification_spec': {
             'industry_spec': {
@@ -86,7 +86,7 @@ test_01_qualifications_add = [
         'msg': ''},
      'add_qualification')]
 
-test_02_qualifications_update = [({'account_id': 'global variable',
+test_02_qualifications_update = [({'account_id': 100006180,
                                    'qualification_type': 'INDUSTRY_QUALIFICATION',
                                    'qualification_id': 'global variable',
                                    'image_id_list': ['global variable']},
@@ -96,7 +96,7 @@ test_02_qualifications_update = [({'account_id': 'global variable',
                                   'update_qualification')]
 
 test_03_qualifications_get = [({
-    'account_id': 'global variable',
+    'account_id': 100006180,
     'qualification_type': 'INDUSTRY_QUALIFICATION',
     'filtering': '',
     'fields': ''},
@@ -106,7 +106,7 @@ test_03_qualifications_get = [({
     'get_qualification')]
 
 test_04_qualifications_delete = [({
-    'account_id': 'global variable',
+    'account_id': 100006180,
     'qualification_type': 'INDUSTRY_QUALIFICATION',
     'qualification_id': 'global variable'},
     {'result': True,
@@ -115,7 +115,7 @@ test_04_qualifications_delete = [({
     'delete_qualification')]
 
 test_01_campaigns_add = [({
-    'account_id': 'global variable',
+    'account_id': 100006180,
     'campaign_name': 'test_campaign_name_{}'.format(dg.randint()),
     'campaign_type': 'CAMPAIGN_TYPE_NORMAL',
     'promoted_object_type': 'PROMOTED_OBJECT_TYPE_LINK',
@@ -129,7 +129,7 @@ test_01_campaigns_add = [({
     'add_campaign')]
 
 test_02_campaigns_update = [({
-    'account_id': 'global variable',
+    'account_id': 100006180,
     'campaign_id': 'global variable',
     'campaign_name': 'update_campaign_name_{}'.format(dg.randint()),
     'daily_budget': '',
@@ -142,7 +142,7 @@ test_02_campaigns_update = [({
     'update_campaign')]
 
 test_03_campaigns_get = [({
-    'account_id': 'global variable',
+    'account_id': 100006180,
     'filtering': '',
     'page': '',
             'page_size': ''
@@ -153,7 +153,7 @@ test_03_campaigns_get = [({
     'get_campaign')]
 
 test_04_campaigns_delete = [({
-    'account_id': 'global variable',
+    'account_id': 100006180,
     'campaign_id': 'global variable'
 },
     {'result': True,
@@ -162,7 +162,7 @@ test_04_campaigns_delete = [({
     'delete_campaign')]
 
 test_01_adgroups_add = [({
-    'account_id': 'global variable',
+    'account_id': 100006180,
     'campaign_id': 'global variable',
     'adgroup_name': 'test_adgroup_name_{}'.format(dg.randint()),
     'site_set': ['SITE_SET_QZONE'],
@@ -180,7 +180,7 @@ test_01_adgroups_add = [({
     'add_adgroup')]
 
 test_02_adgroups_update = [({
-    'account_id': 'global variable',
+    'account_id': 100006180,
     'adgroup_id': 'global variable',
     'adgroup_name': 'update_adgroup_name_{}'.format(dg.randint()),
     'promoted_object_type': 'PROMOTED_OBJECT_TYPE_LINK',
@@ -197,7 +197,7 @@ test_02_adgroups_update = [({
     'update_adgroup')]
 
 test_03_adgroups_get = [({
-    'account_id': 'global variable',
+    'account_id': 100006180,
     'filtering': '',
     'page': '',
             'page_size': ''
@@ -208,7 +208,7 @@ test_03_adgroups_get = [({
     'get_adgroup')]
 
 test_04_adgroups_delete = [({
-    'account_id': 'global variable',
+    'account_id': 100006180,
     'adgroup_id': 'global variable'
 },
     {'result': True,
@@ -217,7 +217,7 @@ test_04_adgroups_delete = [({
     'delete_adgroup')]
 
 test_01_ads_add = [({
-    'account_id': 'global variable',
+    'account_id': 100006180,
     'adgroup_id': 'global variable',
     'adcreative_id': 'global variable',
     'ad_name': 'test_ad_name_{}'.format(dg.randint()),
@@ -232,7 +232,7 @@ test_01_ads_add = [({
     'add_ad')]
 
 test_02_ads_update = [({
-    'account_id': 'global variable',
+    'account_id': 100006180,
     'ad_id': 'global variable',
     'ad_name': 'update_ad_name_{}'.format(dg.randint()),
     'configured_status': '',
@@ -245,7 +245,7 @@ test_02_ads_update = [({
     'update_ad')]
 
 test_03_ads_get = [({
-    'account_id': 'global variable',
+    'account_id': 100006180,
     'filtering': '',
     'page': '',
             'page_size': ''
@@ -256,7 +256,7 @@ test_03_ads_get = [({
     'get_ad')]
 
 test_04_ads_delete = [({
-    'account_id': 'global variable',
+    'account_id': 100006180,
     'ad_id': 'global variable'
 },
     {'result': True,
@@ -265,7 +265,7 @@ test_04_ads_delete = [({
     'delete_ad')]
 
 test_01_adcreatives_add = [({
-    'account_id': 'global variable',
+    'account_id': 100006180,
     'campaign_id': 'global variable',
     'adcreative_name': 'test_adcreative_name_{}'.format(dg.randint()),
     'adcreative_template_id': 529,
@@ -286,10 +286,10 @@ test_01_adcreatives_add = [({
     'add_adcreative')]
 
 test_02_adcreatives_update = [({
-    'account_id': 'global variable',
+    'account_id': 100006180,
     'adcreative_id': 'global variable',
     'adcreative_name': 'update_adcreative_name_{}'.format(dg.randint()),
-    'adcreative_elements': {'image': '3519', 'title': 'update_title_'.format(dg.randint())},
+    'adcreative_elements': {'image': '3519', 'title': 'update_title_{}'.format(dg.randint())},
     'page_type': 'PAGE_TYPE_DEFAULT',
     'page_spec': '',
     'deep_link_url': '',
@@ -302,7 +302,7 @@ test_02_adcreatives_update = [({
     'update_adcreative')]
 
 test_03_adcreatives_get = [({
-    'account_id': 'global variable',
+    'account_id': 100006180,
     'filtering': '',
     'page': '',
     'page_size': ''},
@@ -313,17 +313,17 @@ test_03_adcreatives_get = [({
 
 test_04_adcreatives_delete = [
     ({
-        'account_id': 'global variable', 'adcreative_id': 'global variable'}, {
+        'account_id': 100006180, 'adcreative_id': 'global variable'}, {
             'result': True, 'code': 0, 'msg': ''}, 'delete_advertiser')]
 
 test_01_targeting_add = [
     ({
-        'account_id': 'global variable', 'targeting_name': 'test_targeting_name_{}'.format(
+        'account_id': 100006180, 'targeting_name': 'test_targeting_name_{}'.format(
             dg.randint()), 'targeting': '', 'description': 'test_description_{}'.format(
                 dg.randint())}, {
         'result': True, 'code': 0, 'msg': ''}, 'add_targeting')]
 
-test_02_targeting_update = [({'account_id': 'global variable',
+test_02_targeting_update = [({'account_id': 100006180,
                               'targeting_id': 'gloabl variable',
                               'targeting_name': 'update_targeting_name_{}'.format(dg.randint()),
                               'targeting': '',
@@ -335,7 +335,7 @@ test_02_targeting_update = [({'account_id': 'global variable',
 
 test_03_targeting_get = [
     ({
-        'account_id': 'global variable',
+        'account_id': 100006180,
         'filtering': '',
         'page': '',
         'page_size': ''}, {
@@ -349,14 +349,14 @@ test_01_targeting_tags_get = [
 
 test_01_capabilities_get = [
     ({
-        'account_id': 'global variable',
+        'account_id': 100006180,
         'capability': 'CAPABILITY_WECHAT_ECOMMERCE_PRODUCT',
         'query_spec': ''}, {
         'result': True, 'code': 0, 'msg': ''}, 'get_capabilities')]
 
 test_01_estimation_get = [
     ({
-        'account_id': 'global variable',
+        'account_id': 100006180,
         'adgroup': '',
         'adcreative': '',
         'targeting': {
@@ -370,7 +370,7 @@ test_01_estimation_get = [
 
 test_01_realtime_cost_get = [
     ({
-        'account_id': 'global variable',
+        'account_id': 100006180,
         'level': 'ADVERTISER',
         'date': '2019-4-10',
         'filtering': '',
@@ -398,7 +398,7 @@ test_02_images_get = [
 test_01_video_add = [
     ({
         'account_id': 'global variable',
-        'video': pp.path_join(pp.current_path(),'misc/video.webm')
+        'video': pp.path_join(pp.current_path(), 'misc/video.webm')
     }, {
         'result': True, 'code': 0, 'msg': ''}, 'add_video')]
 
@@ -413,7 +413,7 @@ test_02_video_get = [
 
 test_01_fund_transfer_add = [
     ({
-        'account_id': 'global variable',
+        'account_id': 100006180,
         'fund_type': 'FUND_TYPE_CASH',
         'amount': 5000,
         'transfer_type': 'AGENCY_TO_ADVERTISER',
@@ -423,13 +423,13 @@ test_01_fund_transfer_add = [
 
 test_01_funds_get = [
     ({
-        'account_id': 'global variable'}, {
+        'account_id': 100006180}, {
         'result': True, 'code': 0, 'msg': ''}, 'get_funds')
 ]
 
 test_01_fund_statements_daily_get = [
     ({
-        'account_id': 'global variable',
+        'account_id': 100006180,
         'fund_type': 'FUND_TYPE_CASH',
         'date_range': {
             'start_date': '2019-03-10',
@@ -441,7 +441,7 @@ test_01_fund_statements_daily_get = [
 
 test_01_fund_statements_detailed_get = [
     ({
-        'account_id': 'global variable',
+        'account_id': 100006180,
         'fund_type': 'FUND_TYPE_CASH',
         'date_range': {
             'start_date': '2019-03-10',
@@ -454,7 +454,7 @@ test_01_fund_statements_detailed_get = [
 
 test_01_adcreatives2_add = [
     ({
-        'account_id': 'global variable',
+        'account_id': 100006180,
         'campaign_id': 'global variable',
         'adcreative_name': 'test_adcreative_name_{}'.format(dg.randint()),
         'adcreative_template_id': 529,
@@ -482,7 +482,7 @@ test_01_adcreatives2_add = [
 
 test_02_adcreatives2_update = [
     ({
-        'account_id': 'global variable',
+        'account_id': 100006180,
         'adcreative_id': 'global variable',
         'adcreative_name': 'update_adcreative_name_{}'.format(dg.randint()),
         'adcreative_elements': {'image': '3519', 'title': 'update_title_{}'.format(dg.randint())},
@@ -504,7 +504,7 @@ test_02_adcreatives2_update = [
 
 test_03_adcreatives2_delete = [
     ({
-        'account_id': 'global variable',
+        'account_id': 100006180,
         'adcreative_id': 'global variable',
         'ad_id': 'global variable'}, {
         'result': True, 'code': 0, 'msg': ''}, 'delete_adcreatives2')
