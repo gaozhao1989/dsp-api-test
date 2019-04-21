@@ -9,8 +9,8 @@ verify_ssl = true
 pytest = "==4.1.0"
 allure-pytest = "==2.5.4"
 requests = "==2.21.0"
-pymongo = "*"
-sshtunnel = "*"
+pymongo = "==3.7.2"
+sshtunnel = "==0.1.4"
 
 [requires]
 python_version = "3.6"
