@@ -24,9 +24,9 @@ class Runner(object):
         """
         self.path_parser = PathParser()
         self.tests_dir = self.path_parser.path_join(
-            self.path_parser.get_workspace_root_path(), 'tests')
+            self.path_parser.current_path(), 'tests')
         self.report_dir = self.path_parser.path_join(
-            self.path_parser.get_workspace_root_path(), 'report')
+            self.path_parser.current_path(), 'report')
         self.html_report_dir = self.path_parser.path_join(
             self.report_dir, 'html')
         # remove the latest the results if exists

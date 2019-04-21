@@ -114,6 +114,11 @@ html_report_path:代表输出的html报告文件夹<br>
 使用命令行工具
 >allure serve [path_of_report]<br>
 
+报告模版首页
+![results_overall](/misc/screenshots/results_overall.png)
+报告模版详情
+![results_detail](/misc/screenshots/results_detail.png)
+
 可以直接启动allure服务并查看测试结果<br>
 <span style="color:red">注意：直接打开*index.html*在某些浏览器中将显示结果为*404 not found*</span><br>
 ------
@@ -121,7 +126,12 @@ html_report_path:代表输出的html报告文件夹<br>
 ## 调试&运行
 ### 调试
 通过**tests**目录下的单独**test_xxxx**运行测试，适用范围仅限于当前测试文件
+示例：
+>pytest ./tests/test_tsa.py::TestTsaAdvertiser::test_01_advertiser_add
+
 ![debug_command](/misc/screenshots/debug_command.png)
+
+示例：输出结果
 ![debug_results](/misc/screenshots/debug_results.png)
 ### 运行
 通过**runner.py**文件指定运行，运行指定测试目录默认为**tests**目录
