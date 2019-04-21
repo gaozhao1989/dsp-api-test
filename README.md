@@ -151,3 +151,43 @@ wx:<br>
     
 2. 返回值错误：<br>
 {'code': 10000, 'message': 'We are unable to process your request at this time. Please retry your request. If you encounter this error repeatedly, please contact our dedicated supporting team.'} 测试服常见，腾讯方面原因，无法解决<br>
+
+------
+
+## 测试用例
+#### 详细描述
+测试用例文件的结构如下：<br>
+测试文件>测试组（测试类）>测试用例<br>
+可以有多个测试文件，测试文件中也可以有多个测试组，测试组中可以有多个测试用例。测试用例是测试执行的最小单元。
+以下为一个具体的测试用例：<br>
+```
+@pytest.mark.usefixtures('base')    # 该装饰器用以标注测试组使用pytest进行配置
+class TestWxApiImages(object):
+
+    @Log.logtestcase()  # 该装饰器用以进行测试用例的日志输出
+    @pytest.mark.parametrize(   # 该测试用例用以进行测试用例的参数化操作
+        'payload, res, test_title', # 固定模版，payload为入参参数，res为测试结果，test_title为测试标题
+        wx.test_01_images_add)  # 参数化文件
+    def test_01_images_add(
+            self,
+            payload,
+            res,
+            test_title,
+            mongodb):   # mongodb 的实例，仅在初始化测试时开启，测试结束后关闭
+        files = {'image': open(payload['image'], 'rb')  # 确认请求参数
+                 if payload['image'] else ''}
+        payload = {'appid': payload['appid']}
+        url = urllib.parse.urljoin(addr, 'images/add')  # 拼接请求 url
+        response = r.req('POST', url, json=payload) # 请求并获取返回值
+        au.assertgroup(res, response, ['code', 'message'])  # assertgroup对异组相同参数进行值校验
+        if res['result']:
+            cursor = mongodb.sndo['wx.image'].find_one( # 使用mongo读取数据库数值
+                {'image_id': response['data']['image_id']})
+            au.assertnotfound(cursor, response['data']['image_id']) # assertnotfound返回值是否存在
+            global image_id # 设置全局变量，该变量可跨越多个测试用例
+            image_id = response['data']['image_id']
+            au.assertgroup(
+                cursor, payload, [
+                    'signature', 'preview_url', 'type', 'width', 'height', 'size'])
+```
+![testcase](misc/screenshots/test_case.png)
