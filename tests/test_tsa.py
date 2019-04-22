@@ -162,7 +162,7 @@ def get_targeting_id(glo=True, payload={'targeting_id': 'global variable'}):
 
         99252
     """   
-    if payload['targeting_id'] == 'globale variable':
+    if payload['targeting_id'] == 'global variable':
         global targeting_id
         if targeting_id is None:
             add_targeting_payload = tsa.test_01_targeting_add[0][0]
@@ -365,7 +365,7 @@ class TestTsaInd(object):
             for tag in response['data']:
                 cursor = mongodb.sndo['tsa.industry'].find_one(
                     {'_id': tag['_id']})
-                au.assertnotfound(cursor, tag['id'])
+                au.assertnotfound(cursor, tag['_id'])
                 au.assertgroup(cursor, tag, ['describe', 'name', 'pid'])
 
 
@@ -514,6 +514,7 @@ class TestTsaQualifications(object):
         tsa.test_01_qualifications_add)
     def test_01_qualifications_add(self, payload, res, test_title, mongodb):
         # account_id and image_id should be associated
+        # add qualification will failed if the account's system_status is 'CUSTOMER_STATUS_NORMAL'
         payload['account_id'] = get_account_id(payload=payload)
         payload_qua_spec = payload['qualification_spec'][next(
             iter(payload['qualification_spec']))]
@@ -597,8 +598,8 @@ class TestTsaQualifications(object):
         au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             cursor = mongodb.sndo['tsa.account.qualification'].find_one(
-                {'qualification_id': response['data']['qualification_id']})
-            au.assertnotfound(cursor, response['data']['qualification_id'])
+                {'qualification_id': payload['qualification_id']})
+            au.assertnotfound(cursor, payload['qualification_id'])
             au.assertgroup(
                 cursor, payload, [
                     'qualification_type', 'qualification_id', 'image_id_list'])
@@ -977,8 +978,8 @@ class TestTsaAds(object):
         response = r.req('POST', url, json=payload)
         au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
-            cursor = mongodb.sndo['tsa.adgroup'].find_one(
-                {'adgroup_id': response['data']['ad_id']})
+            cursor = mongodb.sndo['tsa.ad'].find_one(
+                {'ad_id': response['data']['ad_id']})
             au.assertnotfound(cursor, response['data']['ad_id'])
             assert cursor['is_deleted'], 'delete fail'
 

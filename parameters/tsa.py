@@ -73,7 +73,7 @@ test_03_advertiser_get = [
 
 test_01_qualifications_add = [
     ({
-        'account_id': 100006180,
+        'account_id': 'global variable',
         'qualification_type': 'INDUSTRY_QUALIFICATION',
         'qualification_spec': {
             'industry_spec': {
@@ -86,7 +86,7 @@ test_01_qualifications_add = [
         'msg': ''},
      'add_qualification')]
 
-test_02_qualifications_update = [({'account_id': 100006180,
+test_02_qualifications_update = [({'account_id': 'global variable',
                                    'qualification_type': 'INDUSTRY_QUALIFICATION',
                                    'qualification_id': 'global variable',
                                    'image_id_list': ['global variable']},
@@ -96,7 +96,7 @@ test_02_qualifications_update = [({'account_id': 100006180,
                                   'update_qualification')]
 
 test_03_qualifications_get = [({
-    'account_id': 100006180,
+    'account_id': 'global variable',
     'qualification_type': 'INDUSTRY_QUALIFICATION',
     'filtering': '',
     'fields': ''},
@@ -106,7 +106,7 @@ test_03_qualifications_get = [({
     'get_qualification')]
 
 test_04_qualifications_delete = [({
-    'account_id': 100006180,
+    'account_id': 'global variable',
     'qualification_type': 'INDUSTRY_QUALIFICATION',
     'qualification_id': 'global variable'},
     {'result': True,
@@ -165,7 +165,7 @@ test_01_adgroups_add = [({
     'account_id': 100006180,
     'campaign_id': 'global variable',
     'adgroup_name': 'test_adgroup_name_{}'.format(dg.randint()),
-    'site_set': ['SITE_SET_QZONE'],
+    'site_set': ['SITE_SET_QQCLIENT'],
     'promoted_object_type': 'PROMOTED_OBJECT_TYPE_LINK',
     'begin_date': '2019-03-07',
     'end_date': '',
@@ -269,11 +269,11 @@ test_01_adcreatives_add = [({
     'campaign_id': 'global variable',
     'adcreative_name': 'test_adcreative_name_{}'.format(dg.randint()),
     'adcreative_template_id': 529,
-    'adcreative_elements': {'image': '3519', 'title': 'test_title_'.format(dg.randint())},
+    'adcreative_elements': {'image': '3519', 'title': 'test_title_{}'.format(dg.randint())},
     'site_set': ['SITE_SET_QQCLIENT'],
     'promoted_object_type': 'PROMOTED_OBJECT_TYPE_LINK',
     'page_type': 'PAGE_TYPE_DEFAULT',
-    'page_spec': '',
+    'page_spec': {'page_url':'https://qq.com'},
     'deep_link_url':'',
     'promoted_object_id':'',
     'share_content_spec':'',
@@ -291,7 +291,7 @@ test_02_adcreatives_update = [({
     'adcreative_name': 'update_adcreative_name_{}'.format(dg.randint()),
     'adcreative_elements': {'image': '3519', 'title': 'update_title_{}'.format(dg.randint())},
     'page_type': 'PAGE_TYPE_DEFAULT',
-    'page_spec': '',
+    'page_spec': {'page_url':'https://qq.com'},
     'deep_link_url': '',
     'share_content_spec': '',
     'dynamic_adcreative_spec': '',
@@ -324,7 +324,7 @@ test_01_targeting_add = [
         'result': True, 'code': 0, 'msg': ''}, 'add_targeting')]
 
 test_02_targeting_update = [({'account_id': 100006180,
-                              'targeting_id': 'gloabl variable',
+                              'targeting_id': 'global variable',
                               'targeting_name': 'update_targeting_name_{}'.format(dg.randint()),
                               'targeting': '',
                               'description': 'update_description_{}'.format(dg.randint())},

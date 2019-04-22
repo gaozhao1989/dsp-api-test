@@ -150,7 +150,10 @@ wx:<br>
     custom_audiences(有用例，但mongo无数据结构)<br>
     
 2. 返回值错误：<br>
-{'code': 10000, 'message': 'We are unable to process your request at this time. Please retry your request. If you encounter this error repeatedly, please contact our dedicated supporting team.'} 测试服常见，腾讯方面原因，无法解决<br>
+{'code': 10000, 'message': 'We are unable to process your request at this time. Please retry your request. If you encounter this error repeatedly, please contact our dedicated supporting team.'} 测试服常见，腾讯方面原因，无法解决，建议重跑<br>
+
+3. 广电通资质相关<br>
+广点通创建资质，参数所传账号系统状态(system_status)必须不为CUSTOMER_STATUS_NORMAL，否则不能创建成功
 
 ------
 

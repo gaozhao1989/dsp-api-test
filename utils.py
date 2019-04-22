@@ -351,6 +351,10 @@ class AssertUtils:
         """
         for item in lis2assert:
             if item in groupa and item in groupb:
+                groupa[item] = '' if groupa[item] in [
+                    None, '', {}] else groupa[item]
+                groupb[item] = '' if groupb[item] in [
+                    None, '', {}] else groupb[item]
                 assert groupa[item] == groupb[item], '{}: "{}" and "{}" not equal'.format(
                     item, groupa[item], groupb[item])
 
