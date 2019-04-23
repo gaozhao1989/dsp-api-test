@@ -33,7 +33,7 @@ targeting_id = None
 @allure.step('step for get the account_id')
 def get_account_id(glo=True, payload={'account_id': 'global variable'}):
     """Get variable 'account_id' value.
-    
+
     Get the value of variable 'account_id'. 
     Condition 1:Check the 'account_id' in parameters, replace the value from global 
     variable if 'global variable' as the value of 'account_id'.
@@ -61,6 +61,8 @@ def get_account_id(glo=True, payload={'account_id': 'global variable'}):
                 account_id = response['data']['account_id']
         return account_id
     else:
+        if glo:
+            account_id = payload['account_id']
         return payload['account_id']
 
 
@@ -69,7 +71,7 @@ def get_qualification_id(
     glo=True, payload={
         'qualification_id': 'global variable'}):
     """Get variable 'qualification_id' value.
-    
+
     Get the value of variable 'qualification_id'. 
     Condition 1:Check the 'qualification_id' in parameters, replace the value from global 
     variable if 'global variable' as the value of 'qualification_id'.
@@ -85,7 +87,7 @@ def get_qualification_id(
         A int value of 'qualification_id'. For example:
 
         10261234
-    """    
+    """
     if payload['qualification_id'] == 'global variable':
         global qualification_id
         if qualification_id is None:
@@ -101,13 +103,15 @@ def get_qualification_id(
                 qualification_id = response['data']['qualification_id']
         return qualification_id
     else:
+        if glo:
+            qualification_id = payload['qualification_id']
         return payload['qualification_id']
 
 
 @allure.step('step for get the campaign_id')
 def get_campaign_id(glo=True, payload={'campaign_id': 'global variable'}):
     """Get variable 'campaign_id' value.
-    
+
     Get the value of variable 'campaign_id'. 
     Condition 1:Check the 'campaign_id' in parameters, replace the value from global 
     variable if 'global variable' as the value of 'campaign_id'.
@@ -123,7 +127,7 @@ def get_campaign_id(glo=True, payload={'campaign_id': 'global variable'}):
         A int value of 'campaign_id'. For example:
 
         29847
-    """    
+    """
     if payload['campaign_id'] == 'global variable':
         global campaign_id
         if campaign_id is None:
@@ -139,13 +143,15 @@ def get_campaign_id(glo=True, payload={'campaign_id': 'global variable'}):
                 campaign_id = response['data']['campaign_id']
         return campaign_id
     else:
+        if glo:
+            campaign_id = payload['campaign_id']
         return payload['campaign_id']
 
 
 @allure.step('step for get the targeting_id')
 def get_targeting_id(glo=True, payload={'targeting_id': 'global variable'}):
     """Get variable 'targeting_id' value.
-    
+
     Get the value of variable 'targeting_id'. 
     Condition 1:Check the 'targeting_id' in parameters, replace the value from global 
     variable if 'global variable' as the value of 'targeting_id'.
@@ -161,7 +167,7 @@ def get_targeting_id(glo=True, payload={'targeting_id': 'global variable'}):
         A int value of 'targeting_id'. For example:
 
         99252
-    """   
+    """
     if payload['targeting_id'] == 'global variable':
         global targeting_id
         if targeting_id is None:
@@ -177,13 +183,15 @@ def get_targeting_id(glo=True, payload={'targeting_id': 'global variable'}):
                 targeting_id = response['data']['targeting_id']
         return targeting_id
     else:
+        if glo:
+            targeting_id = payload['targeting_id']
         return payload['targeting_id']
 
 
 @allure.step('step for get the adgroup_id')
 def get_adgroup_id(glo=True, payload={'adgroup_id': 'global variable'}):
     """Get variable 'adgroup_id' value.
-    
+
     Get the value of variable 'adgroup_id'. 
     Condition 1:Check the 'adgroup_id' in parameters, replace the value from global 
     variable if 'global variable' as the value of 'adgroup_id'.
@@ -199,7 +207,7 @@ def get_adgroup_id(glo=True, payload={'adgroup_id': 'global variable'}):
         A int value of 'adgroup_id'. For example:
 
         41869
-    """  
+    """
     if payload['adgroup_id'] == 'global variable':
         global adgroup_id
         if adgroup_id is None:
@@ -219,13 +227,15 @@ def get_adgroup_id(glo=True, payload={'adgroup_id': 'global variable'}):
                 adgroup_id = response['data']['adgroup_id']
         return adgroup_id
     else:
+        if glo:
+            adgroup_id = payload['adgroup_id']
         return payload['adgroup_id']
 
 
 @allure.step('step for get the adcreative_id')
 def get_adcreative_id(glo=True, payload={'adcreative_id': 'global variable'}):
     """Get variable 'adcreative_id' value.
-    
+
     Get the value of variable 'adcreative_id'. 
     Condition 1:Check the 'adcreative_id' in parameters, replace the value from global 
     variable if 'global variable' as the value of 'adcreative_id'.
@@ -241,7 +251,7 @@ def get_adcreative_id(glo=True, payload={'adcreative_id': 'global variable'}):
         A int value of 'adcreative_id'. For example:
 
         64019
-    """  
+    """
     if payload['adcreative_id'] == 'global variable':
         global adcreative_id
         if adcreative_id is None:
@@ -259,13 +269,15 @@ def get_adcreative_id(glo=True, payload={'adcreative_id': 'global variable'}):
                 adcreative_id = response['data']['adcreative_id']
         return adcreative_id
     else:
+        if glo:
+            adcreative_id = payload['adcreative_id']
         return payload['adcreative_id']
 
 
 @allure.step('step for get the ad_id')
 def get_ad_id(glo=True, payload={'ad_id': 'global variable'}):
     """Get variable 'ad_id' value.
-    
+
     Get the value of variable 'ad_id'. 
     Condition 1:Check the 'ad_id' in parameters, replace the value from global 
     variable if 'global variable' as the value of 'ad_id'.
@@ -281,7 +293,7 @@ def get_ad_id(glo=True, payload={'ad_id': 'global variable'}):
         A int value of 'ad_id'. For example:
 
         36312
-    """      
+    """
     if payload['ad_id'] == 'global variable':
         global ad_id
         if ad_id is None:
@@ -301,13 +313,15 @@ def get_ad_id(glo=True, payload={'ad_id': 'global variable'}):
                 ad_id = response['data']['ad_id']
         return ad_id
     else:
+        if glo:
+            ad_id = payload['ad_id']
         return payload['ad_id']
 
 
 @allure.step('step for get the image_id')
 def get_image_id(glo=True, payload={'image_id': 'global variable'}):
     """Get variable 'image_id' value.
-    
+
     Get the value of variable 'image_id'. 
     Condition 1:Check the 'image_id' in parameters, replace the value from global 
     variable if 'global variable' as the value of 'image_id'.
@@ -322,7 +336,7 @@ def get_image_id(glo=True, payload={'image_id': 'global variable'}):
         A int value of 'image_id'. For example:
 
         36312
-    """   
+    """
     if payload['image_id'] == 'global variable':
         global image_id
         if image_id is None:
@@ -344,13 +358,15 @@ def get_image_id(glo=True, payload={'image_id': 'global variable'}):
                 image_id = response['data']['image_id']
         return image_id
     else:
+        if glo:
+            image_id = payload['image_id']
         return payload['image_id']
 
 
 @pytest.mark.userfixtures('base')
 class TestTsaInd(object):
     """Test cases for TSA industry check.
-    
+
     Include: get the industry list.
     """
 
@@ -372,7 +388,7 @@ class TestTsaInd(object):
 @pytest.mark.userfixtures('base')
 class TestTsaQua(object):
     """Test cases for TSA qualification check.
-    
+
     Include: get the qualification information.
     """
 
@@ -388,7 +404,7 @@ class TestTsaQua(object):
 @pytest.mark.userfixtures('base')
 class TestTsaADCreativeTemplates(object):
     """Test cases for TSA adcreative templates check.
-    
+
     Include: get the adcreative templates information.
     """
 
@@ -408,7 +424,7 @@ class TestTsaADCreativeTemplates(object):
 @pytest.mark.userfixtures('base')
 class TestTsaAdvertiser(object):
     """Test cases for TSA advertiser check.
-    
+
     Include: 01.add an advertiser.
     02.update an advertiser.
     03.get the advertiser list.
@@ -500,7 +516,7 @@ class TestTsaAdvertiser(object):
 @pytest.mark.userfixtures('base')
 class TestTsaQualifications(object):
     """Test cases for TSA qualification check.
-    
+
     Include: 01.add a qualification.
     02.update a qualification.
     03.get the qualification list.
@@ -635,7 +651,7 @@ class TestTsaQualifications(object):
 @pytest.mark.userfixtures('base')
 class TestTsaCampaigns(object):
     """Test cases for TSA campaign check.
-    
+
     Include: 01.add a campaign.
     02.update a campaign.
     03.get the campaign list.
@@ -743,7 +759,7 @@ class TestTsaCampaigns(object):
 @pytest.mark.usefixtures('base')
 class TestTsaAdgroups(object):
     """Test cases for TSA adgroup check.
-    
+
     Include: 01.add an adgroup.
     02.update an adgroup.
     03.get the adgroup list.
@@ -880,7 +896,7 @@ class TestTsaAdgroups(object):
 @pytest.mark.userfixtures('base')
 class TestTsaAds(object):
     """Test cases for TSA ad check.
-    
+
     Include: 01.add an ad.
     02.update an ad.
     03.get the ad list.
@@ -987,7 +1003,7 @@ class TestTsaAds(object):
 @pytest.mark.usefixtures('base')
 class TestTsaAdcreatives(object):
     """Test cases for TSA adcreative check.
-    
+
     Include: 01.add an adcreative.
     02.update an adcreative.
     03.get the adcreative list.
@@ -1108,7 +1124,7 @@ class TestTsaAdcreatives(object):
 @pytest.mark.usefixtures('base')
 class TestTsaTargeting(object):
     """Test cases for TSA targeting check.
-    
+
     Include: 01.add a targeting.
     02.update a targeting.
     03.get the targeting list.
@@ -1128,6 +1144,8 @@ class TestTsaTargeting(object):
             cursor = mongodb.sndo['tsa.targeting'].find_one(
                 {'targeting_id': response['data']['targeting_id']})
             au.assertnotfound(cursor, response['data']['targeting_id'])
+            global targeting_id
+            targeting_id = response['data']['targeting_id']
             au.assertgroup(
                 cursor, payload, [
                     'account_id', 'targeting_name', 'targeting', 'description'])
@@ -1165,16 +1183,17 @@ class TestTsaTargeting(object):
             for tag in response['data']['list']:
                 cursor = mongodb.sndo['tsa.targeting'].find_one(
                     {'targeting_id': tag['targeting_id']})
+                # clean data
                 au.assertnotfound(cursor, tag['targeting_id'])
                 au.assertgroup(
-                    cursor, tag, [
+                    dg.clean_empty(cursor), tag, [
                         'account_id', 'targeting_name', 'targeting', 'description'])
 
 
 @pytest.mark.usefixtures('base')
 class TestTsaTargetingTags(object):
     """Test cases for TSA targeting tag check.
-    
+
     Include: 01.get the targeting tag list.
     """
 
@@ -1190,20 +1209,16 @@ class TestTsaTargetingTags(object):
         if res['result']:
             for tag in response['data']['list']:
                 cursor = mongodb.sndo['tsa.targeting_tag'].find_one(
-                    {
-                        'id': tag['id'],
-                        'name': tag['name'],
-                        'parent_id': tag['parent_id'],
-                        'parent_name': tag['parent_name'],
-                        'city_level': tag['city_level']})
-                au.assertnotfound(cursor, tag['targeting_id'])
-                au.assertgroup(cursor, payload, ['type'])
+                    {'id': tag['id']})
+                au.assertnotfound(cursor, tag['id'])
+                au.assertgroup(
+                    cursor, tag, ['id', 'name', 'parent_id', 'parent_name', 'city_level'])
 
 
 @pytest.mark.usefixtures('base')
 class TestTsaCapabilities(object):
     """Test cases for TSA capability check.
-    
+
     Include: 01.get the capability information.
     """
 
@@ -1222,9 +1237,9 @@ class TestTsaCapabilities(object):
 @pytest.mark.usefixtures('base')
 class TestTsaEstimation(object):
     """Test cases for TSA estimation check.
-    
+
     Include: 01.get the estimation information.
-    """  
+    """
 
     @Log.logtestcase()
     @allure.title('{test_title}')
@@ -1246,9 +1261,9 @@ class TestTsaEstimation(object):
 @pytest.mark.usefixtures('base')
 class TestTsaRealtimeCost(object):
     """Test cases for TSA real time cost check.
-    
+
     Include: 01.get the real time cost information.
-    """  
+    """
 
     @Log.logtestcase()
     @allure.title('{test_title}')
@@ -1265,10 +1280,10 @@ class TestTsaRealtimeCost(object):
 @pytest.mark.usefixtures('base')
 class TestTsaImages(object):
     """Test cases for TSA images check.
-    
+
     Include: 01.add a image.
     02.get the image list.
-    """  
+    """
 
     @Log.logtestcase()
     @allure.title('{test_title}')
@@ -1276,6 +1291,7 @@ class TestTsaImages(object):
         'payload, res, test_title',
         tsa.test_01_images_add)
     def test_01_images_add(self, payload, res, test_title, mongodb):
+        payload['account_id'] = get_account_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'images/add')
         op = open(payload['image'], 'rb') if payload['image'] else ''
         files = {'image': op}
@@ -1314,15 +1330,16 @@ class TestTsaImages(object):
 @pytest.mark.usefixtures('base')
 class TestTsaVideo(object):
     """Test cases for TSA videos check.
-    
+
     Include: 01.add a video.
     02.get the video list.
-    """  
+    """
 
     @Log.logtestcase()
     @allure.title('{test_title}')
     @pytest.mark.parametrize('payload, res, test_title', tsa.test_01_video_add)
     def test_01_video_add(self, payload, res, test_title, mongodb):
+        payload['account_id'] = get_account_id(payload=payload)
         url = urllib.parse.urljoin(addr, 'video/add')
         op = open(payload['video'], 'rb') if payload['video'] else ''
         files = {'video': op}
@@ -1359,9 +1376,9 @@ class TestTsaVideo(object):
 @pytest.mark.usefixtures('base')
 class TestTsaFundTransfer(object):
     """Test cases for TSA fund transfer check.
-    
+
     Include: 01.get the fund transfer information.
-    """  
+    """
 
     @Log.logtestcase()
     @allure.title('{test_title}')
@@ -1376,16 +1393,16 @@ class TestTsaFundTransfer(object):
         au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             au.assertgroup(
-                response['data'], payload, [
-                    'fund_type', 'amount', 'external_bill_no'])
+                payload, response['data'],['fund_type', 'amount'])
+            assert payload['external_bill_no'] in response['data']['external_bill_no']
 
 
 @pytest.mark.usefixtures('base')
 class TestTsaFunds(object):
     """Test cases for TSA fund check.
-    
+
     Include: 01.get the fund information.
-    """  
+    """
 
     @Log.logtestcase()
     @allure.title('{test_title}')
@@ -1400,9 +1417,9 @@ class TestTsaFunds(object):
 @pytest.mark.usefixtures('base')
 class TestTsaFundStatementsDaily(object):
     """Test cases for TSA fund statement daily check.
-    
+
     Include: 01.get the fund statement daily information.
-    """   
+    """
 
     @Log.logtestcase()
     @allure.title('{test_title}')
@@ -1420,9 +1437,9 @@ class TestTsaFundStatementsDaily(object):
 @pytest.mark.usefixtures('base')
 class TestTsaFundStatementsDetailed(object):
     """Test cases for TSA fund statement detailed check.
-    
+
     Include: 01.get the fund statement detailed information.
-    """    
+    """
 
     @Log.logtestcase()
     @allure.title('{test_title}')
@@ -1440,7 +1457,7 @@ class TestTsaFundStatementsDetailed(object):
 @pytest.mark.usefixtures('base')
 class TestTsAadcreatives2(object):
     """Test cases for TSA ad and adcreative in signle action.
-    
+
     Include: 01.add an ad and adcreative.
     02.update an ad and adcreative.
     03.delete an ad and advertiser.
