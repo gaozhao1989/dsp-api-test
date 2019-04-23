@@ -8,8 +8,8 @@ pp = PathParser()
 
 test_01_advertiser_add = [({'appid': 'wxd1de6b7bf1d874f9',
                             'system_industry_id': 2102,
-                            'contact_person': 'test_contact_person',
-                            'contact_person_telephone': '15880000001',
+                            'contact_person': 'test_contact_person_{}'.format(dg.randint()),
+                            'contact_person_telephone': '028-87787667',
                             'business_type': '',
                             'business_content': '',
                             'sndo_ader_id': ''},
@@ -20,14 +20,20 @@ test_01_advertiser_add = [({'appid': 'wxd1de6b7bf1d874f9',
 
 test_02_advertiser_update = [({'appid': 'wxd1de6b7bf1d874f9',
                                'system_industry_id': 2102,
-                               'contact_person': 'test_contact_person',
-                               'contact_person_telephone': '15880000001',
+                               'contact_person': 'update_contact_person_{}'.format(dg.randint()),
+                               'contact_person_telephone': '028-87787667',
                                'business_type': '',
                                'business_content': ''},
                               {'result': True,
                                'code': 0,
                                'msg': ''},
                               'update_advertiser')]
+
+test_03_advertiser_get = [({'appid': 'wxd1de6b7bf1d874f9'},
+                              {'result': True,
+                               'code': 0,
+                               'msg': ''},
+                              'get_advertiser')]
 
 test_01_qualifications_add = [({'appid': 'wxd1de6b7bf1d874f9',
                                 'qualification_type': 'INDUSTRY_QUALIFICATION',
