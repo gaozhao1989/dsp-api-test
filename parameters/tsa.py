@@ -381,14 +381,14 @@ test_01_realtime_cost_get = [
 
 test_01_images_add = [
     ({
-        'account_id': 'global variable',
+        'account_id': 100006180,
         'image': dg.drawimage()
     }, {
         'result': True, 'code': 0, 'msg': ''}, 'add_image')]
 
 test_02_images_get = [
     ({
-        'account_id': 'global variable',
+        'account_id': 100006180,
         'filtering': '',
         'page': '',
         'page_size': ''
@@ -397,14 +397,14 @@ test_02_images_get = [
 
 test_01_video_add = [
     ({
-        'account_id': 'global variable',
-        'video': pp.path_join(pp.current_path(), 'misc/video.webm')
+        'account_id': 100006180,
+        'video': pp.path_join(pp.current_path(), 'misc', 'video.mp4')
     }, {
         'result': True, 'code': 0, 'msg': ''}, 'add_video')]
 
 test_02_video_get = [
     ({
-        'account_id': 'global variable',
+        'account_id': 100006180,
         'filtering': '',
         'page': '',
         'page_size': ''
@@ -417,7 +417,7 @@ test_01_fund_transfer_add = [
         'fund_type': 'FUND_TYPE_CASH',
         'amount': 5000,
         'transfer_type': 'AGENCY_TO_ADVERTISER',
-        'external_bill_no': 'test_external_bill_{}'.format(dg.randchr()),
+        'external_bill_no': 'test_external_bill_{}'.format(dg.randint()),
         'memo': 'test_memo_{}'.format(dg.randint())}, {
         'result': True, 'code': 0, 'msg': ''}, 'add_fund_transfer')]
 
@@ -461,7 +461,7 @@ test_01_adcreatives2_add = [
         'adcreative_elements': {'image': '3519', 'title': 'test_title_{}'.format(dg.randint())},
         'site_set': ['SITE_SET_QQCLIENT'],
         'page_spec': {'page_id': 0,
-                      'page_url': 'https://www.example.com'},
+                      'page_url': 'https://qq.com'},
         'promoted_object_type': 'PROMOTED_OBJECT_TYPE_LINK',
         'page_type': 'PAGE_TYPE_DEFAULT',
         'adgroup_id': 'global variable',
@@ -487,7 +487,7 @@ test_02_adcreatives2_update = [
         'adcreative_name': 'update_adcreative_name_{}'.format(dg.randint()),
         'adcreative_elements': {'image': '3519', 'title': 'update_title_{}'.format(dg.randint())},
         'page_spec': {'page_id': 0,
-                      'page_url': 'https://www.example.com'},
+                      'page_url': 'https://qq.com'},
         'page_type': 'PAGE_TYPE_DEFAULT',
         'deep_link_url': '',
         'share_content_spec': '',
