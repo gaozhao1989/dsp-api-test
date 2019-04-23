@@ -1,5 +1,6 @@
 import configparser
 import datetime
+import hashlib
 import json
 import logging
 import os
@@ -14,8 +15,7 @@ import requests
 import shutil
 
 from sshtunnel import SSHTunnelForwarder
-from PIL import Image, ImageDraw
-
+from PIL import Image, ImageDraw  
 
 class Log(object):
     """Log utils for pytest.
@@ -190,7 +190,7 @@ class Requests:
                 Argument list: params, data, json, headers, cookies, files,
                 auth, timeout, allow_redirects, proxies, verify, stream, cert
 
-        Returns:
+        Returns:、
             The json format response content will be returned if request progress
             success.
 
@@ -201,8 +201,7 @@ class Requests:
             logging.info('request url:{}'.format(url))
             # json args clean, remove the empty variables
             if 'json' in kwargs:
-                kwargs['json'] = {k: v for k,
-                                  v in kwargs['json'].items() if v is not ''}
+                kwargs['json'] = DataGenerator().clean_empty(kwargs['json'])
             logging.info('request args:{}'.format(kwargs))
             response = requests.request(method, url, **kwargs)
         except requests.exceptions.RequestException as e:
@@ -328,7 +327,19 @@ class DataGenerator:
         path = pp.path_join(pp.current_path(), 'misc', 'image.png')
         img.save(path)
         return path
+    
+    def clean_empty(self, d):
+        """Clean the empty item in dict or list. Use recursion to make sure 
+        all empty string, list, dict will be remove.
 
+        Returns:
+            The cleaned dict.
+        """
+        if not isinstance(d, (dict, list)):
+            return d
+        if isinstance(d, list):
+            return [v for v in (self.clean_empty(v) for v in d) if v]
+        return {k: v for k, v in ((k, self.clean_empty(v)) for k, v in d.items()) if v}
 
 class AssertUtils:
     """AssertUtils utils to use the assert segment in test cases.
@@ -352,11 +363,11 @@ class AssertUtils:
         for item in lis2assert:
             if item in groupa and item in groupb:
                 groupa[item] = '' if groupa[item] in [
-                    None, '', {}] else groupa[item]
+                    None, '', {}, 0] else groupa[item]
                 groupb[item] = '' if groupb[item] in [
-                    None, '', {}] else groupb[item]
-                assert groupa[item] == groupb[item], '{}: "{}" and "{}" not equal'.format(
-                    item, groupa[item], groupb[item])
+                    None, '', {}, 0] else groupb[item]
+                assert groupa[item] == groupb[item], '{}: "{}" and "{}" not equal. original groups are {} CAMPARE {}'.format(
+                    item, groupa[item], groupb[item], groupa, groupb)
 
     def assertnotfound(self, key, value):
         """Check the data if exists, valued or correct.
