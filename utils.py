@@ -170,7 +170,7 @@ class PathParser:
         """
         for path in paths:
             if os.path.exists(path):
-                shutil.rmtree(path)
+                shutil.rmtree(path, ignore_errors=True)
 
 
 class Requests:
@@ -200,8 +200,11 @@ class Requests:
         try:
             logging.info('request url:{}'.format(url))
             # json args clean, remove the empty variables
-            if 'json' in kwargs:
-                kwargs['json'] = DataGenerator().clean_empty(kwargs['json'])
+            if 'clean' not in kwargs:
+                if 'json' in kwargs:
+                    kwargs['json'] = DataGenerator().clean_empty(kwargs['json'])
+            else:
+                del kwargs['clean']
             logging.info('request args:{}'.format(kwargs))
             response = requests.request(method, url, **kwargs)
         except requests.exceptions.RequestException as e:
@@ -340,6 +343,19 @@ class DataGenerator:
         if isinstance(d, list):
             return [v for v in (self.clean_empty(v) for v in d) if v]
         return {k: v for k, v in ((k, self.clean_empty(v)) for k, v in d.items()) if v}
+
+    def get_current_date(self, fmt="%Y-%m-%d"):
+        """Generate current date time as string format.
+
+        Default format is '%Y-%m-%d', show like: 1999-03-02
+
+        Args:
+            fmt: The format of date time.
+
+        Returns:
+            The string of date time.
+        """
+        return datetime.datetime.now().strftime(fmt)
 
 class AssertUtils:
     """AssertUtils utils to use the assert segment in test cases.
