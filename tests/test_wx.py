@@ -29,149 +29,132 @@ image_id = None
 audience_id = None
 custom_audience_file_id = None
 
+def generic_get_id(var, var_name, payload, new_var_payload, new_var_url):
+    """GET the specifc data value (not only limit for id). In common case, 
+    this func used for get the id of the specfic target value.
+
+    Check the value if exists, if not will generate new one.
+
+    Args:
+        var: The global variable.
+        var_name: The variable name.
+        payload: The dict which contains the specfic variable.
+        new_var_payload: The payload for generate new target value.
+        new_var_url: The url for generate new target value.
+
+    Returns:
+        The specfic target value.
+    
+    Example:
+        campaign_val = generic_get_id(
+            campaign_id, 'campaign_id', payload, add_cam_payload, add_cam_url)
+        ....
+    """
+    var_val = None
+    if var is None:
+        if payload[var_name] =='global variable':
+            response = r.req('POST', new_var_url, json=new_var_payload)
+            var_val = response['data'][var_name]
+        else:
+            var_val = payload[var_name]
+    else:
+        if payload[var_name] =='global variable':
+            var_val = var
+        else:
+            var_val = payload[var_name]
+    return var_val
+
 
 @allure.step('step for get the campaign_id')
 def get_campaign_id(glo=True, payload={'campaign_id': 'global variable'}):
-    if payload['campaign_id'] == 'global variable':
-        global campaign_id
-        if campaign_id is None:
-            add_cam_payload = wx.test_01_campaigns_add[0][0]
-            url = urllib.parse.urljoin(addr, 'campaigns/add')
-            response = r.req(
-                'POST',
-                url,
-                json=add_cam_payload)
-            if glo:
-                campaign_id = response['data']['campaign_id']
-        return campaign_id
-    else:
-        if glo:
-            campaign_id = payload['campaign_id']
-        return payload['campaign_id']
+    global campaign_id
+    add_cam_payload = wx.test_01_campaigns_add[0][0]
+    url = urllib.parse.urljoin(addr, 'campaigns/add')
+    campaign_val = generic_get_id(
+        campaign_id, 'campaign_id', payload, add_cam_payload, url)
+    if glo:
+        campaign_id = campaign_val
+    return campaign_val
 
 
 @allure.step('step for get the adgroup_id')
 def get_adgroup_id(glo=True, payload={'adgroup_id': 'global variable'}):
-    if payload['adgroup_id'] == 'global variable':
-        global adgroup_id
-        if adgroup_id is None:
-            add_adgroup_payload = wx.test_01_adgroups_add[0][0]
-            add_adgroup_payload['campaign_id'] = get_campaign_id(
-                payload=add_adgroup_payload)
-            url = urllib.parse.urljoin(addr, 'adgroups/add')
-            response = r.req(
-                'POST',
-                url,
-                json=add_adgroup_payload)
-            if glo:
-                adgroup_id = response['data']['adgroup_id']
-        return adgroup_id
-    else:
-        if glo:
-            adgroup_id = payload['adgroup_id']
-        return payload['adgroup_id']
+    global adgroup_id
+    add_adgroup_payload = wx.test_01_adgroups_add[0][0]
+    add_adgroup_payload['campaign_id'] = get_campaign_id(
+        payload=add_adgroup_payload)
+    url = urllib.parse.urljoin(addr, 'adgroups/add')
+    adgroup_val = generic_get_id(
+        adgroup_id, 'adgroup_id', payload, add_adgroup_payload, url)
+    if glo:
+        adgroup_id = adgroup_val
+    return adgroup_val
 
 
 @allure.step('step for get the adcreative_id')
 def get_adcreative_id(glo=True, payload={'adcreative_id': 'global variable'}):
-    if payload['adcreative_id'] == 'global variable':
-        global adcreative_id
-        if adcreative_id is None:
-            add_adcreative_payload = wx.test_01_adcreatives_add[0][0]
-            add_adcreative_payload['campaign_id'] = get_campaign_id(
-                payload=add_adcreative_payload)
-            url = urllib.parse.urljoin(addr, 'adcreatives/add')
-            response = r.req(
-                'POST',
-                url,
-                json=add_adcreative_payload)
-            if glo:
-                adcreative_id = response['data']['adcreative_id']
-        return adcreative_id
-    else:
-        if glo:
-            adcreative_id = payload['adcreative_id']
-        return payload['adcreative_id']
+    global adcreative_id
+    add_adcreative_payload = wx.test_01_adcreatives_add[0][0]
+    add_adcreative_payload['campaign_id'] = get_campaign_id(
+        payload=add_adcreative_payload)
+    url = urllib.parse.urljoin(addr, 'adcreatives/add')
+    adcreative_val = generic_get_id(
+        adcreative_id, 'adcreative_id', payload, add_adcreative_payload, url)
+    if glo:
+        adadcreative_id_id = adcreative_val
+    return adcreative_val
 
 
 @allure.step('step for get the ad_id')
 def get_ad_id(glo=True, payload={'ad_id': 'global variable'}):
-    if payload['ad_id'] == 'global variable':
-        global ad_id
-        if ad_id is None:
-            add_ad_payload = wx.test_01_ads_add[0][0]
-            add_ad_payload['adgroup_id'] = get_adgroup_id(
-                payload=add_ad_payload)
-            add_ad_payload['adcreative_id'] = get_adcreative_id(
-                payload=add_ad_payload)
-            url = urllib.parse.urljoin(addr, 'ads/add')
-            response = r.req(
-                'POST',
-                url,
-                json=add_ad_payload)
-            if glo:
-                ad_id = response['data']['ad_id']
-        return ad_id
-    else:
-        if glo:
-            ad_id = payload['ad_id']
-        return payload['ad_id']
+    global ad_id
+    add_ad_payload = wx.test_01_ads_add[0][0]
+    add_ad_payload['adgroup_id'] = get_adgroup_id(
+        payload=add_ad_payload)
+    add_ad_payload['adcreative_id'] = get_adcreative_id(
+        payload=add_ad_payload)
+    url = urllib.parse.urljoin(addr, 'ads/add')
+    ad_val = generic_get_id(
+        ad_id, 'ad_id', payload, add_ad_payload, url)
+    if glo:
+        ad_id = ad_val
+    return ad_val
 
 
 @allure.step('step for get the image_id')
 def get_image_id(glo=True, payload={'image_id': 'global variable'}):
-    if payload['image_id'] == 'global variable':
-        global image_id
-        if image_id is None:
-            add_image_payload = wx.test_01_images_add[0][0]
-            url = urllib.parse.urljoin(addr, 'images/add')
-            response = r.req(
-                'POST',
-                url,
-                json=add_image_payload)
-            if glo:
-                image_id = response['data']['image_id']
-    else:
-        if glo:
-            image_id = payload['image_id']
-        return payload['image_id']
+    global image_id
+    add_image_payload = wx.test_01_images_add[0][0]
+    url = urllib.parse.urljoin(addr, 'images/add')
+    image_val = generic_get_id(
+        image_id, 'image_id', payload, add_image_payload, url)
+    if glo:
+        image_id = image_val
+    return image_val
 
 
 @allure.step('step for get the audience_id')
 def get_audience_id(glo=True, payload={'audience_id': 'global variable'}):
-    if payload['audience_id'] == 'global variable':
-        global audience_id
-        if audience_id is None:
-            add_audience_payload = wx.test_01_custom_audiences_add[0][0]
-            url = urllib.parse.urljoin(addr, 'custom_audiences/add')
-            response = r.req(
-                'POST',
-                url,
-                json=add_audience_payload)
-            if glo:
-                audience_id = response['data']['audience_id']
-    else:
-        if glo:
-            audience_id = payload['audience_id']
-        return payload['audience_id']
+    global audience_id
+    add_audience_payload = wx.test_01_custom_audiences_add[0][0]
+    url = urllib.parse.urljoin(addr, 'custom_audiences/add')
+    audience_val = generic_get_id(
+        audience_id, 'audience_id', payload, add_audience_payload, url)
+    if glo:
+        audience_id = audience_val
+    return audience_val
+
 
 @allure.step('step for get the audience_id')
-def get_qualification_id(glo=True,payload={'qualification_id':'global variable'}):
-    if payload['qualification_id'] == 'global variable':
-        global qualification_id
-        if qualification_id is None:
-            add_qualification_payload = wx.test_01_qualifications_add[0][0]
-            url = urllib.parse.urljoin(addr, 'qualifications/add')
-            response = r.req(
-                'POST',
-                url,
-                json=add_qualification_payload)
-            if glo:
-                qualification_id = response['data']['qualification_id']
-    else:
-        if glo:
-            qualification_id = payload['qualification_id']
-        return payload['qualification_id']
+def get_qualification_id(glo=True, payload={'qualification_id': 'global variable'}):
+    global qualification_id
+    add_qualification_payload = wx.test_01_qualifications_add[0][0]
+    url = urllib.parse.urljoin(addr, 'qualifications/add')
+    qualification_val = generic_get_id(
+        qualification_id, 'qualification_id', payload, add_qualification_payload, url)
+    if glo:
+        qualification_id = qualification_val
+    return qualification_val
 
 
 @pytest.mark.userfixtures('base')
@@ -248,6 +231,7 @@ class TestWxApiQualifications(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_01_qualifications_add)
@@ -281,6 +265,7 @@ class TestWxApiQualifications(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_qualifications_add')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_02_qualifications_get)
@@ -308,6 +293,7 @@ class TestWxApiQualifications(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_02_qualifications_get')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_03_qualifications_delete)
@@ -338,6 +324,7 @@ class TestWxApiSpEntrustment(object):
     # Notice: no resources now
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_01_sp_entrustment_add)
@@ -354,6 +341,7 @@ class TestWxApiSpEntrustment(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_sp_entrustment_add')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_02_sp_entrustment_get)
@@ -446,6 +434,7 @@ class TestWxApiCampaigns(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_01_campaigns_add)
@@ -475,6 +464,7 @@ class TestWxApiCampaigns(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_campaigns_add')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_02_campaigns_get)
@@ -507,6 +497,7 @@ class TestWxApiCampaigns(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_02_campaigns_get')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_03_campaigns_update)
@@ -530,7 +521,7 @@ class TestWxApiCampaigns(object):
                 if payload['configured_status'] == '':
                     payload['configured_status'] = 'AD_STATUS_SUSPEND'
             au.assertgroup(af_cursor, payload, [
-                              'campaign_name', 'configured_status'])
+                'campaign_name', 'configured_status'])
             assert str(
                 af_cursor['daily_budget']) == str(
                 payload['daily_budget']) if str(
@@ -539,6 +530,7 @@ class TestWxApiCampaigns(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_02_campaigns_update')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_04_campaigns_delete)
@@ -564,6 +556,7 @@ class TestWxApiAdgroups(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_01_adgroups_add)
@@ -605,6 +598,7 @@ class TestWxApiAdgroups(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_adgroups_add')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_02_adgroups_update)
@@ -636,6 +630,7 @@ class TestWxApiAdgroups(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_02_adgroups_update')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_03_adgroups_get)
@@ -678,6 +673,7 @@ class TestWxApiAdgroups(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_03_adgroups_get')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_04_adgroups_delete)
@@ -709,6 +705,7 @@ class TestWxApiAdcreatives(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_01_adcreatives_add)
@@ -745,6 +742,7 @@ class TestWxApiAdcreatives(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_adcreatives_add')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_02_adcreatives_update)
@@ -769,6 +767,7 @@ class TestWxApiAdcreatives(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_02_adcreatives_update')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_03_adcreatives_get)
@@ -803,6 +802,7 @@ class TestWxApiAdcreatives(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_03_adcreatives_get')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_04_adcreatives_delete)
@@ -828,6 +828,7 @@ class TestWxApiAds(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_01_ads_add)
@@ -869,6 +870,7 @@ class TestWxApiAds(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_ads_add')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_02_ads_update)
@@ -890,6 +892,7 @@ class TestWxApiAds(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_03_ads_get')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_03_ads_get)
@@ -923,6 +926,7 @@ class TestWxApiAds(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_03_ads_get')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_04_ads_delete)
@@ -948,6 +952,7 @@ class TestWxApiImages(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_01_images_add)
@@ -975,6 +980,7 @@ class TestWxApiImages(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_images_add')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_02_images_get)
@@ -1005,6 +1011,7 @@ class TestWxApiCustomAudiences(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_01_custom_audiences_add)
@@ -1028,6 +1035,7 @@ class TestWxApiCustomAudiences(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_custom_audiences_add')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_02_custom_audiences_update)
@@ -1044,13 +1052,13 @@ class TestWxApiCustomAudiences(object):
         if res['result']:
             # NOTICES: the db structure not exists now
             cursor = mongodb.sndo['wx.audience'].find_one(
-                {'audience_id': response['data']['audience_id']})
-            au.assertnotfound(cursor, response['data']['audience_id'])
-            audience_id = response['data']['audience_id']
+                {'audience_id': payload['audience_id']})
+            au.assertnotfound(cursor, payload['audience_id'])
             au.assertgroup(cursor, payload, ['name', 'type', 'description'])
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_02_custom_audiences_update')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_03_custom_audiences_get)
@@ -1062,7 +1070,7 @@ class TestWxApiCustomAudiences(object):
             mongodb):
         if 'audience_id' in payload:
             payload['audience_id'] = get_audience_id(payload=payload)
-        url = urllib.parse.urljoin(addr, 'custom_audiences/add')
+        url = urllib.parse.urljoin(addr, 'custom_audiences/get')
         response = r.req('POST', url, json=payload)
         au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
@@ -1088,6 +1096,7 @@ class TestWxApiCustomAudienceFiles(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_01_custom_audience_files_add)
@@ -1111,6 +1120,7 @@ class TestWxApiCustomAudienceFiles(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_custom_audience_files_add')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_02_custom_audience_files_get)
@@ -1163,7 +1173,7 @@ class TestWxApiRealtimeCost(object):
             test_title,
             mongodb):
         url = urllib.parse.urljoin(addr, 'realtime_cost/get')
-        response = r.req('POST', url, json=payload)
+        response = r.req('POST', url, json=payload, clean=False)
         au.assertgroup(res, response, ['code', 'message'])
 
 
@@ -1172,6 +1182,7 @@ class TestWxApiEstimation(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.skip(reason='invalid access_token or url in response')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_01_estimation_get)
@@ -1194,6 +1205,7 @@ class TestWxApiAdcreatives2(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_01_adcreatives2_add)
@@ -1239,6 +1251,7 @@ class TestWxApiAdcreatives2(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_adcreatives2_add')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_02_adcreatives2_update)
@@ -1269,6 +1282,7 @@ class TestWxApiAdcreatives2(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_02_adcreatives2_update')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         wx.test_03_adcreatives2_delete)

@@ -29,6 +29,40 @@ image_id = None
 qualification_id = None
 targeting_id = None
 
+def generic_get_id(var, var_name, payload, new_var_payload, new_var_url):
+    """GET the specifc data value (not only limit for id). In common case, 
+    this func used for get the id of the specfic target value.
+
+    Check the value if exists, if not will generate new one.
+
+    Args:
+        var: The global variable.
+        var_name: The variable name.
+        payload: The dict which contains the specfic variable.
+        new_var_payload: The payload for generate new target value.
+        new_var_url: The url for generate new target value.
+
+    Returns:
+        The specfic target value.
+    
+    Example:
+        campaign_val = generic_get_id(
+            campaign_id, 'campaign_id', payload, add_cam_payload, add_cam_url)
+        ....
+    """
+    var_val = None
+    if var is None:
+        if payload[var_name] =='global variable':
+            response = r.req('POST', new_var_url, json=new_var_payload)
+            var_val = response['data'][var_name]
+        else:
+            var_val = payload[var_name]
+    else:
+        if payload[var_name] =='global variable':
+            var_val = var
+        else:
+            var_val = payload[var_name]
+    return var_val
 
 @allure.step('step for get the account_id')
 def get_account_id(glo=True, payload={'account_id': 'global variable'}):
@@ -49,21 +83,14 @@ def get_account_id(glo=True, payload={'account_id': 'global variable'}):
 
         100006180
     """
-    if payload['account_id'] == 'global variable':
-        global account_id
-        if account_id is None:
-            url = urllib.parse.urljoin(addr, 'advertiser/add')
-            response = r.req(
-                'POST',
-                url,
-                json=tsa.test_01_advertiser_add[0][0])
-            if glo:
-                account_id = response['data']['account_id']
-        return account_id
-    else:
-        if glo:
-            account_id = payload['account_id']
-        return payload['account_id']
+    global account_id
+    add_account_payload = tsa.test_01_advertiser_add[0][0]
+    url = urllib.parse.urljoin(addr, 'advertiser/add')
+    account_val = generic_get_id(
+        account_id, 'account_id', payload, add_account_payload, url)
+    if glo:
+        account_id = account_val
+    return account_val
 
 
 @allure.step('step for get the qualification_id')
@@ -88,24 +115,16 @@ def get_qualification_id(
 
         10261234
     """
-    if payload['qualification_id'] == 'global variable':
-        global qualification_id
-        if qualification_id is None:
-            add_qua_payload = tsa.test_01_qualifications_add[0][0]
-            add_qua_payload['account_id'] = get_account_id(
-                payload=add_qua_payload)
-            url = urllib.parse.urljoin(addr, 'qualifications/add')
-            response = r.req(
-                'POST',
-                url,
-                json=add_qua_payload)
-            if glo:
-                qualification_id = response['data']['qualification_id']
-        return qualification_id
-    else:
-        if glo:
-            qualification_id = payload['qualification_id']
-        return payload['qualification_id']
+    global qualification_id
+    add_qua_payload = tsa.test_01_qualifications_add[0][0]
+    add_qua_payload['account_id'] = get_account_id(
+        payload=add_qua_payload)
+    url = urllib.parse.urljoin(addr, 'qualifications/add')
+    qualification_val = generic_get_id(
+        qualification_id, 'qualification_id', payload, add_qua_payload, url)
+    if glo:
+        qualification_id = qualification_val
+    return qualification_val
 
 
 @allure.step('step for get the campaign_id')
@@ -128,24 +147,16 @@ def get_campaign_id(glo=True, payload={'campaign_id': 'global variable'}):
 
         29847
     """
-    if payload['campaign_id'] == 'global variable':
-        global campaign_id
-        if campaign_id is None:
-            add_cam_payload = tsa.test_01_campaigns_add[0][0]
-            add_cam_payload['account_id'] = get_account_id(
-                payload=add_cam_payload)
-            url = urllib.parse.urljoin(addr, 'campaigns/add')
-            response = r.req(
-                'POST',
-                url,
-                json=add_cam_payload)
-            if glo:
-                campaign_id = response['data']['campaign_id']
-        return campaign_id
-    else:
-        if glo:
-            campaign_id = payload['campaign_id']
-        return payload['campaign_id']
+    global campaign_id
+    add_cam_payload = tsa.test_01_campaigns_add[0][0]
+    add_cam_payload['account_id'] = get_account_id(
+        payload=add_cam_payload)
+    url = urllib.parse.urljoin(addr, 'campaigns/add')
+    campaign_val = generic_get_id(
+        campaign_id, 'campaign_id', payload, add_cam_payload, url)
+    if glo:
+        campaign_id = campaign_val
+    return campaign_val
 
 
 @allure.step('step for get the targeting_id')
@@ -168,24 +179,16 @@ def get_targeting_id(glo=True, payload={'targeting_id': 'global variable'}):
 
         99252
     """
-    if payload['targeting_id'] == 'global variable':
-        global targeting_id
-        if targeting_id is None:
-            add_targeting_payload = tsa.test_01_targeting_add[0][0]
-            add_targeting_payload['account_id'] = get_account_id(
-                payload=add_targeting_payload)
-            url = urllib.parse.urljoin(addr, 'targeting/add')
-            response = r.req(
-                'POST',
-                url,
-                json=add_targeting_payload)
-            if glo:
-                targeting_id = response['data']['targeting_id']
-        return targeting_id
-    else:
-        if glo:
-            targeting_id = payload['targeting_id']
-        return payload['targeting_id']
+    global targeting_id
+    add_targeting_payload = tsa.test_01_targeting_add[0][0]
+    add_targeting_payload['account_id'] = get_account_id(
+        payload=add_targeting_payload)
+    url = urllib.parse.urljoin(addr, 'targeting/add')
+    targeting_val = generic_get_id(
+        targeting_id, 'targeting_id', payload, add_targeting_payload, url)
+    if glo:
+        targeting_id = targeting_val
+    return targeting_val
 
 
 @allure.step('step for get the adgroup_id')
@@ -208,28 +211,20 @@ def get_adgroup_id(glo=True, payload={'adgroup_id': 'global variable'}):
 
         41869
     """
-    if payload['adgroup_id'] == 'global variable':
-        global adgroup_id
-        if adgroup_id is None:
-            add_adgroup_payload = tsa.test_01_adgroups_add[0][0]
-            add_adgroup_payload['account_id'] = get_account_id(
-                payload=add_adgroup_payload)
-            add_adgroup_payload['campaign_id'] = get_campaign_id(
-                payload=add_adgroup_payload)
-            add_adgroup_payload['targeting_id'] = get_targeting_id(
-                payload=add_adgroup_payload)
-            url = urllib.parse.urljoin(addr, 'adgroups/add')
-            response = r.req(
-                'POST',
-                url,
-                json=add_adgroup_payload)
-            if glo:
-                adgroup_id = response['data']['adgroup_id']
-        return adgroup_id
-    else:
-        if glo:
-            adgroup_id = payload['adgroup_id']
-        return payload['adgroup_id']
+    global adgroup_id
+    add_adgroup_payload = tsa.test_01_adgroups_add[0][0]
+    add_adgroup_payload['account_id'] = get_account_id(
+        payload=add_adgroup_payload)
+    add_adgroup_payload['campaign_id'] = get_campaign_id(
+        payload=add_adgroup_payload)
+    add_adgroup_payload['targeting_id'] = get_targeting_id(
+        payload=add_adgroup_payload)
+    url = urllib.parse.urljoin(addr, 'adgroups/add')
+    adgroup_val = generic_get_id(
+        adgroup_id, 'adgroup_id', payload, add_adgroup_payload, url)
+    if glo:
+        adgroup_id = adgroup_val
+    return adgroup_val
 
 
 @allure.step('step for get the adcreative_id')
@@ -252,26 +247,18 @@ def get_adcreative_id(glo=True, payload={'adcreative_id': 'global variable'}):
 
         64019
     """
-    if payload['adcreative_id'] == 'global variable':
-        global adcreative_id
-        if adcreative_id is None:
-            add_adcreative_payload = tsa.test_01_adcreatives_add[0][0]
-            add_adcreative_payload['account_id'] = get_account_id(
-                payload=add_adcreative_payload)
-            add_adcreative_payload['campaign_id'] = get_campaign_id(
-                payload=add_adcreative_payload)
-            url = urllib.parse.urljoin(addr, 'adcreatives/add')
-            response = r.req(
-                'POST',
-                url,
-                json=add_adcreative_payload)
-            if glo:
-                adcreative_id = response['data']['adcreative_id']
-        return adcreative_id
-    else:
-        if glo:
-            adcreative_id = payload['adcreative_id']
-        return payload['adcreative_id']
+    global adcreative_id
+    add_adcreative_payload = tsa.test_01_adcreatives_add[0][0]
+    add_adcreative_payload['account_id'] = get_account_id(
+        payload=add_adcreative_payload)
+    add_adcreative_payload['campaign_id'] = get_campaign_id(
+        payload=add_adcreative_payload)
+    url = urllib.parse.urljoin(addr, 'adcreatives/add')
+    adcreative_val = generic_get_id(
+        adcreative_id, 'adcreative_id', payload, add_adcreative_payload, url)
+    if glo:
+        adcreative_id = adcreative_val
+    return adcreative_val
 
 
 @allure.step('step for get the ad_id')
@@ -294,28 +281,19 @@ def get_ad_id(glo=True, payload={'ad_id': 'global variable'}):
 
         36312
     """
-    if payload['ad_id'] == 'global variable':
-        global ad_id
-        if ad_id is None:
-            add_ad_payload = tsa.test_01_ads_add[0][0]
-            add_ad_payload['account_id'] = get_account_id(
-                payload=add_ad_payload)
-            add_ad_payload['adgroup_id'] = get_adgroup_id(
-                payload=add_ad_payload)
-            add_ad_payload['adcreative_id'] = get_adcreative_id(
-                payload=add_ad_payload)
-            url = urllib.parse.urljoin(addr, 'ads/add')
-            response = r.req(
-                'POST',
-                url,
-                json=add_ad_payload)
-            if glo:
-                ad_id = response['data']['ad_id']
-        return ad_id
-    else:
-        if glo:
-            ad_id = payload['ad_id']
-        return payload['ad_id']
+    global ad_id
+    add_ad_payload = tsa.test_01_ads_add[0][0]
+    add_ad_payload['account_id'] = get_account_id(
+        payload=add_ad_payload)
+    add_ad_payload['adgroup_id'] = get_adgroup_id(
+        payload=add_ad_payload)
+    add_ad_payload['adcreative_id'] = get_adcreative_id(
+        payload=add_ad_payload)
+    url = urllib.parse.urljoin(addr, 'ads/add')
+    ad_val = generic_get_id(ad_id, 'ad_id', payload, add_ad_payload, url)
+    if glo:
+        ad_id = ad_val
+    return ad_val
 
 
 @allure.step('step for get the image_id')
@@ -337,34 +315,20 @@ def get_image_id(glo=True, payload={'image_id': 'global variable'}):
 
         36312
     """
-    if payload['image_id'] == 'global variable':
-        global image_id
-        if image_id is None:
-            add_image_payload = tsa.test_01_images_add[0][0]
-            add_image_payload['account_id'] = get_account_id(
-                payload=add_image_payload)
-            url = urllib.parse.urljoin(addr, 'images/add')
-            op = open(add_image_payload['image'], 'rb')
-            files = {'image': op}
-            del add_image_payload['image']
-            response = r.req(
-                'POST',
-                url,
-                data=add_image_payload,
-                files=files
-            )
-            op.close()
-            if glo:
-                image_id = response['data']['image_id']
-        return image_id
-    else:
-        if glo:
-            image_id = payload['image_id']
-        return payload['image_id']
+    global image_id
+    add_image_payload = tsa.test_01_images_add[0][0]
+    add_image_payload['account_id'] = get_account_id(
+        payload=add_image_payload)
+    url = urllib.parse.urljoin(addr, 'images/add')
+    image_val = generic_get_id(
+        image_id, 'image_id', payload, add_image_payload, url)
+    if glo:
+        image_id = image_val
+    return image_val
 
 
 @pytest.mark.userfixtures('base')
-class TestTsaInd(object):
+class TestTsaApiInd(object):
     """Test cases for TSA industry check.
 
     Include: get the industry list.
@@ -386,7 +350,7 @@ class TestTsaInd(object):
 
 
 @pytest.mark.userfixtures('base')
-class TestTsaQua(object):
+class TestTsaApiQua(object):
     """Test cases for TSA qualification check.
 
     Include: get the qualification information.
@@ -402,7 +366,7 @@ class TestTsaQua(object):
 
 
 @pytest.mark.userfixtures('base')
-class TestTsaADCreativeTemplates(object):
+class TestTsaApiADCreativeTemplates(object):
     """Test cases for TSA adcreative templates check.
 
     Include: get the adcreative templates information.
@@ -422,7 +386,7 @@ class TestTsaADCreativeTemplates(object):
 
 
 @pytest.mark.userfixtures('base')
-class TestTsaAdvertiser(object):
+class TestTsaApiAdvertiser(object):
     """Test cases for TSA advertiser check.
 
     Include: 01.add an advertiser.
@@ -432,6 +396,7 @@ class TestTsaAdvertiser(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_01_advertiser_add)
@@ -459,6 +424,7 @@ class TestTsaAdvertiser(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_advertiser_add')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_02_advertiser_update)
@@ -488,6 +454,7 @@ class TestTsaAdvertiser(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_02_advertiser_update')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_03_advertiser_get)
@@ -514,7 +481,7 @@ class TestTsaAdvertiser(object):
 
 
 @pytest.mark.userfixtures('base')
-class TestTsaQualifications(object):
+class TestTsaApiQualifications(object):
     """Test cases for TSA qualification check.
 
     Include: 01.add a qualification.
@@ -525,6 +492,7 @@ class TestTsaQualifications(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_01_qualifications_add)
@@ -600,6 +568,7 @@ class TestTsaQualifications(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_qualifications_add')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_02_qualifications_update)
@@ -622,6 +591,7 @@ class TestTsaQualifications(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_02_qualifications_update')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_03_qualifications_get)
@@ -633,6 +603,7 @@ class TestTsaQualifications(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_04_qualifications_delete')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_04_qualifications_delete)
@@ -649,7 +620,7 @@ class TestTsaQualifications(object):
 
 
 @pytest.mark.userfixtures('base')
-class TestTsaCampaigns(object):
+class TestTsaApiCampaigns(object):
     """Test cases for TSA campaign check.
 
     Include: 01.add a campaign.
@@ -660,6 +631,7 @@ class TestTsaCampaigns(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_01_campaigns_add)
@@ -688,6 +660,7 @@ class TestTsaCampaigns(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_campaigns_add')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_02_campaigns_update)
@@ -712,6 +685,7 @@ class TestTsaCampaigns(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_02_campaigns_update')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_03_campaigns_get)
@@ -741,6 +715,7 @@ class TestTsaCampaigns(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_03_campaigns_get')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_04_campaigns_delete)
@@ -757,7 +732,7 @@ class TestTsaCampaigns(object):
 
 
 @pytest.mark.usefixtures('base')
-class TestTsaAdgroups(object):
+class TestTsaApiAdgroups(object):
     """Test cases for TSA adgroup check.
 
     Include: 01.add an adgroup.
@@ -768,6 +743,7 @@ class TestTsaAdgroups(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_01_adgroups_add)
@@ -800,6 +776,7 @@ class TestTsaAdgroups(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_adgroups_add')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_02_adgroups_update)
@@ -830,6 +807,7 @@ class TestTsaAdgroups(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_02_adgroups_update')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_03_adgroups_get)
@@ -878,6 +856,7 @@ class TestTsaAdgroups(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_03_adgroups_get')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_04_adgroups_delete)
@@ -894,7 +873,7 @@ class TestTsaAdgroups(object):
 
 
 @pytest.mark.userfixtures('base')
-class TestTsaAds(object):
+class TestTsaApiAds(object):
     """Test cases for TSA ad check.
 
     Include: 01.add an ad.
@@ -905,6 +884,7 @@ class TestTsaAds(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize('payload, res, test_title', tsa.test_01_ads_add)
     def test_01_ads_add(self, payload, res, test_title, mongodb):
         payload['account_id'] = get_account_id(payload=payload)
@@ -932,6 +912,7 @@ class TestTsaAds(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_ads_add')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_02_ads_update)
@@ -955,6 +936,7 @@ class TestTsaAds(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_02_ads_update')
     @pytest.mark.parametrize('payload, res, test_title', tsa.test_03_ads_get)
     def test_03_ads_get(self, payload, res, test_title, mongodb):
         payload['account_id'] = get_account_id(payload=payload)
@@ -984,6 +966,7 @@ class TestTsaAds(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_03_ads_get')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_04_ads_delete)
@@ -1001,7 +984,7 @@ class TestTsaAds(object):
 
 
 @pytest.mark.usefixtures('base')
-class TestTsaAdcreatives(object):
+class TestTsaApiAdcreatives(object):
     """Test cases for TSA adcreative check.
 
     Include: 01.add an adcreative.
@@ -1012,6 +995,7 @@ class TestTsaAdcreatives(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_01_adcreatives_add)
@@ -1045,6 +1029,7 @@ class TestTsaAdcreatives(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_adcreatives_add')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_02_adcreatives_update)
@@ -1071,6 +1056,7 @@ class TestTsaAdcreatives(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_02_adcreatives_update')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_03_adcreatives_get)
@@ -1105,6 +1091,7 @@ class TestTsaAdcreatives(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_03_adcreatives_get')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_04_adcreatives_delete)
@@ -1122,7 +1109,7 @@ class TestTsaAdcreatives(object):
 
 
 @pytest.mark.usefixtures('base')
-class TestTsaTargeting(object):
+class TestTsaApiTargeting(object):
     """Test cases for TSA targeting check.
 
     Include: 01.add a targeting.
@@ -1132,6 +1119,7 @@ class TestTsaTargeting(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_01_targeting_add)
@@ -1152,6 +1140,7 @@ class TestTsaTargeting(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_targeting_add')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_02_targeting_update)
@@ -1171,6 +1160,7 @@ class TestTsaTargeting(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_02_targeting_update')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_03_targeting_get)
@@ -1191,7 +1181,7 @@ class TestTsaTargeting(object):
 
 
 @pytest.mark.usefixtures('base')
-class TestTsaTargetingTags(object):
+class TestTsaApiTargetingTags(object):
     """Test cases for TSA targeting tag check.
 
     Include: 01.get the targeting tag list.
@@ -1216,7 +1206,7 @@ class TestTsaTargetingTags(object):
 
 
 @pytest.mark.usefixtures('base')
-class TestTsaCapabilities(object):
+class TestTsaApiCapabilities(object):
     """Test cases for TSA capability check.
 
     Include: 01.get the capability information.
@@ -1235,7 +1225,7 @@ class TestTsaCapabilities(object):
 
 
 @pytest.mark.usefixtures('base')
-class TestTsaEstimation(object):
+class TestTsaApiEstimation(object):
     """Test cases for TSA estimation check.
 
     Include: 01.get the estimation information.
@@ -1259,7 +1249,7 @@ class TestTsaEstimation(object):
 
 
 @pytest.mark.usefixtures('base')
-class TestTsaRealtimeCost(object):
+class TestTsaApiRealtimeCost(object):
     """Test cases for TSA real time cost check.
 
     Include: 01.get the real time cost information.
@@ -1278,7 +1268,7 @@ class TestTsaRealtimeCost(object):
 
 
 @pytest.mark.usefixtures('base')
-class TestTsaImages(object):
+class TestTsaApiImages(object):
     """Test cases for TSA images check.
 
     Include: 01.add a image.
@@ -1287,6 +1277,7 @@ class TestTsaImages(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_01_images_add)
@@ -1309,6 +1300,7 @@ class TestTsaImages(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_images_add')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_02_images_get)
@@ -1328,7 +1320,7 @@ class TestTsaImages(object):
 
 
 @pytest.mark.usefixtures('base')
-class TestTsaVideo(object):
+class TestTsaApiVideo(object):
     """Test cases for TSA videos check.
 
     Include: 01.add a video.
@@ -1337,6 +1329,7 @@ class TestTsaVideo(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize('payload, res, test_title', tsa.test_01_video_add)
     def test_01_video_add(self, payload, res, test_title, mongodb):
         payload['account_id'] = get_account_id(payload=payload)
@@ -1357,6 +1350,7 @@ class TestTsaVideo(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_video_add')
     @pytest.mark.parametrize('payload, res, test_title', tsa.test_02_video_get)
     def test_02_video_get(self, payload, res, test_title, mongodb):
         payload['account_id'] = get_account_id(payload=payload)
@@ -1374,7 +1368,7 @@ class TestTsaVideo(object):
 
 
 @pytest.mark.usefixtures('base')
-class TestTsaFundTransfer(object):
+class TestTsaApiFundTransfer(object):
     """Test cases for TSA fund transfer check.
 
     Include: 01.get the fund transfer information.
@@ -1393,12 +1387,12 @@ class TestTsaFundTransfer(object):
         au.assertgroup(res, response, ['code', 'message'])
         if res['result']:
             au.assertgroup(
-                payload, response['data'],['fund_type', 'amount'])
+                payload, response['data'], ['fund_type', 'amount'])
             assert payload['external_bill_no'] in response['data']['external_bill_no']
 
 
 @pytest.mark.usefixtures('base')
-class TestTsaFunds(object):
+class TestTsaApiFunds(object):
     """Test cases for TSA fund check.
 
     Include: 01.get the fund information.
@@ -1415,7 +1409,7 @@ class TestTsaFunds(object):
 
 
 @pytest.mark.usefixtures('base')
-class TestTsaFundStatementsDaily(object):
+class TestTsaApiFundStatementsDaily(object):
     """Test cases for TSA fund statement daily check.
 
     Include: 01.get the fund statement daily information.
@@ -1435,7 +1429,7 @@ class TestTsaFundStatementsDaily(object):
 
 
 @pytest.mark.usefixtures('base')
-class TestTsaFundStatementsDetailed(object):
+class TestTsaApiFundStatementsDetailed(object):
     """Test cases for TSA fund statement detailed check.
 
     Include: 01.get the fund statement detailed information.
@@ -1455,7 +1449,7 @@ class TestTsaFundStatementsDetailed(object):
 
 
 @pytest.mark.usefixtures('base')
-class TestTsAadcreatives2(object):
+class TestTsAApiadcreatives2(object):
     """Test cases for TSA ad and adcreative in signle action.
 
     Include: 01.add an ad and adcreative.
@@ -1465,6 +1459,7 @@ class TestTsAadcreatives2(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run('first')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_01_adcreatives2_add)
@@ -1487,6 +1482,7 @@ class TestTsAadcreatives2(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_01_adcreatives2_add')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_02_adcreatives2_update)
@@ -1524,6 +1520,7 @@ class TestTsAadcreatives2(object):
 
     @Log.logtestcase()
     @allure.title('{test_title}')
+    @pytest.mark.run(after='test_02_adcreatives2_update')
     @pytest.mark.parametrize(
         'payload, res, test_title',
         tsa.test_03_adcreatives2_delete)
