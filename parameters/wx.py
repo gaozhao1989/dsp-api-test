@@ -374,8 +374,8 @@ test_01_realtime_cost_get = [
     ({
         'appid': 'wxd1de6b7bf1d874f9',
         'level': 'ADGROUP',
-        'date': '2019-03-25',
-        'filtering': ''},
+        'date': dg.get_current_date(),
+        'filtering': [{'field':'adgroup_id', 'operator': 'EQUALS','values':['113186536']}]},
      {'result': True,
       'code': 0,
       'msg': ''},
